@@ -1,9 +1,8 @@
 {
-	"name": "dfl",
+	"name": "dfl2",
 	"description" : "dfl2 IS A GUI  only for Windows,now it can be built by Dub and Visual Studio .NET, such as VS 2010.",
 	"homepage": "https://github.com/FrankLike/dfl2",
 	"license" : "LGPL-3.0",
-	"versions": "v1.0.0",
 	"authors" : ["Christopher E. Miller"],
 	"dependencies" : {
 	},
