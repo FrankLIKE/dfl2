@@ -4,9 +4,7 @@
 	"homepage": "https://github.com/FrankLike/dfl2",
 	"license" : "LGPL-3.0",
 	"versions": "v1.0.0",
-	"authors" : [
-		"Christopher E. Miller"
-	],
+	"authors" : ["Christopher E. Miller"],
 	"dependencies" : {
 	},
  
