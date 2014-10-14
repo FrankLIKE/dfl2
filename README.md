@@ -10,11 +10,16 @@ You can get the lib files by :
 
 1、Open the dfl.sln,run the projects，get the libs and exe in 'debug' folder and 'release' folder.
 
-2、Open the cmd.exe , input 'build.bat',then will get the 'debug' folder and 'release' folder,yours libs and exe in there. 
+2、Double click the cmd.exe , input 'build.bat',then will get the 'debug' folder and 'release' folder,yours libs and exe in there. 
 
 the dflexe.exe can get the bat file ,like the old the 'dfl.exe':
 
 You can use it like :
   
   dflexe app.d
+
+3、dfl in vs 2010,it can auto complete the words:
+
+  Here ,you can see the picture:
+  ![dfl's auto complete words in VS2010](https://raw.githubusercontent.com/FrankLIKE/dfl2/master/Images/dflpart.png)
 
