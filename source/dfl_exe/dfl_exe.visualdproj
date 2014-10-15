@@ -50,8 +50,8 @@
   <compiler>0</compiler>
   <otherDMD>0</otherDMD>
   <program>$(DMDInstallDir)windows\bin\dmd.exe</program>
-  <imppath />
-  <fileImppath />
+  <imppath>..</imppath>
+  <fileImppath>..</fileImppath>
   <outdir>$(ConfigurationName)</outdir>
   <objdir>$(OutDir)</objdir>
   <objname />
@@ -148,8 +148,8 @@
   <compiler>0</compiler>
   <otherDMD>0</otherDMD>
   <program>$(DMDInstallDir)windows\bin\dmd.exe</program>
-  <imppath />
-  <fileImppath />
+  <imppath>..</imppath>
+  <fileImppath>..</fileImppath>
   <outdir>$(ConfigurationName)</outdir>
   <objdir>$(OutDir)</objdir>
   <objname />
@@ -184,8 +184,8 @@
   <cv2pdbOptions />
   <objfiles />
   <linkswitches />
-  <libfiles>..\source\release\dfl.lib  ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib  advapi32.lib uuid.lib ws2_32.lib</libfiles>
-  <libpaths>..\source\release</libpaths>
+  <libfiles>..\release\dfl.lib  ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib  advapi32.lib uuid.lib ws2_32.lib</libfiles>
+  <libpaths>..\release</libpaths>
   <deffile />
   <resfile />
   <exefile>$(OutDir)\$(ProjectName).exe</exefile>
@@ -197,6 +197,6 @@
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep</filesToClean>
  </Config>
  <Folder name="dflexe">
-  <File path="dfl_exe.d" />
+  <File path="dflexe.d" />
  </Folder>
 </DProject>

@@ -1,25 +1,35 @@
 dfl2
 ====
-dfl2 is the gui controls on windows,it is based the D2 ,Now is D2.066.
+dfl2 is the GUI controls on windows,which is based on D2 ,now D2.066.
 
-the dfl.lib linker libs:ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib.
+linker libs:
+====
+ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib.
 
-Now dfl can be used in Visual Studio .net,here is VS 2010. 
+The latest features:
+====
+1、dfl can be used in Visual Studio .net (here VS 2010)， whose intellisense will help you very well(to look at the Screenshot).
 
-You can get the lib files by :
+2、dfl can be used in DUB. 
 
-1、Open the dfl.sln,run the projects，get the libs and exe in 'debug' folder and 'release' folder.
+How to get the libs or exe files:
+====
+1、Open the dfl.sln, and run the projects to get them in 'debug' folder and 'release' folder.
 
-2、Double click the cmd.exe , input 'build.bat',then will get the 'debug' folder and 'release' folder,yours libs and exe in there. 
+2、Double click the cmd.exe, and input 'build.bat' to get them in 'debug' folder and 'release' folder.
 
-the dflexe.exe can get the bat file ,like the old the 'dfl.exe':
 
-You can use it like :
-  
+
+New thing(only for test):  dflexe.exe 
+
+'dflexe.exe' can create the batch processing info ,like the old the 'dfl.exe':
+
+How to use the 'dflexe':
+====  
   dflexe app.d
 
-3、dfl in vs 2010,it can auto complete the words:
 
-  Here ,you can see the picture:
-  ![dfl's auto complete words in VS2010](https://raw.githubusercontent.com/FrankLIKE/dfl2/master/Images/dflpart.png)
+  Screenshot:
+====
+  ![dfl's intellisense in VS2010](https://raw.githubusercontent.com/FrankLIKE/dfl2/master/Images/dflpart.png)
 

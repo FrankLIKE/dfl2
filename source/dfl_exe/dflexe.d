@@ -1,4 +1,5 @@
-module dfle;
+module dflexe;
+///come from the old 'dflexe.d'
 import std.path;
 import std.stream;
 import dfl.application;
