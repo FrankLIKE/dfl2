@@ -13,7 +13,7 @@
   <verbose>0</verbose>
   <vtls>0</vtls>
   <vgc>0</vgc>
-  <symdebug>0</symdebug>
+  <symdebug>2</symdebug>
   <optimize>0</optimize>
   <cpu>0</cpu>
   <isX86_64>0</isX86_64>
@@ -86,7 +86,7 @@
   <cv2pdbOptions />
   <objfiles />
   <linkswitches />
-  <libfiles>..\source\Debug\dfl.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib</libfiles>
+  <libfiles>..\source\Debug\dfl_debug.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib</libfiles>
   <libpaths>..\source\Debug</libpaths>
   <deffile />
   <resfile />
