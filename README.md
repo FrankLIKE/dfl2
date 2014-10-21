@@ -21,13 +21,15 @@ How to get the libs or exe files:
 
 
 New thing(only for test):  dflexe.exe 
-
+==== 
 'dflexe.exe' can create the batch processing info ,like the old the 'dfl.exe':
 
 How to use the 'dflexe':
 ====  
   dflexe app.d
 
+Now can debug with VD0.3.39
+====
 
   Screenshot:
 ====
