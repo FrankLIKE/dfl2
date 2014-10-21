@@ -31,14 +31,14 @@
 			 "targetPath" : "release",
 			"targetName": "dfl",
             "libs":[
-            		"ole32.lib",
-            		"oleAut32.lib",
-            		"gdi32.lib",
-            		"comctl32.lib",
-            		"comdlg32.lib",
-            		"advapi32.lib",
-            		"uuid.lib",
-            		"ws2_32.lib"
+            		"ole32",
+            		"oleAut32",
+            		"gdi32",
+            		"comctl32",
+            		"comdlg32",
+            		"advapi32",
+            		"uuid",
+            		"ws2_32"
             		]
 		},
 		{
