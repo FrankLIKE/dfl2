@@ -1,5 +1,6 @@
 module dflexe;
 ///come from the old 'dflexe.d'
+import std.stdio;
 import std.path;
 import std.stream;
 import dfl.application;
@@ -35,32 +36,40 @@ enum Flags: DWORD
 
 string importdir,startpath, basepath;
 string dmdpath, dmdpath_windows = "\0";
+string strDebug="-debug";
 void main(string[] args)
 {
 	startpath = getshortpath(Application.startupPath);
-	if(args.length <2) return;
-	buildExe(args[1]);
+	if(args.length <2 || (args.length == 2 && (args[1]=="-h" || args[1]=="-help")))
+	{
+		ShowUsage();
+		return;
+	}
+	 
+	buildExe(args);
 }
 
-void buildExe(string args)
+void buildExe(string[] args)
 {
-	//findimportdir();
-
-	//string dflsrcdir = std.path.buildPath(importdir, "dfl");
 	string batfilepath = std.path.buildPath(startpath, "exe.bat");
 
 	scope batf = new BufferedFile(batfilepath, FileMode.OutNew);
-    string buildstr ="dmd -de -debug -w -property -X -I$(DMDInstallDir)windows\\import dfl_debug.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib -L/SUBSYSTEM:WINDOWS "~args~"\r\n";
+	
+	if(args.length ==3)
+	{
+		strDebug =args[2];
+	}
+ 
+    string buildstr ="dmd -de -w -property -X -I$(DMDInstallDir)windows\\import dfl_debug.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib -L/SUBSYSTEM:WINDOWS "~args[1]~" "~strDebug~"\r\n";// 
 	batf.writeString(buildstr);
 	batf.writeString("\r\n");
-	//batf.writeString("\r\n pause");
 	batf.close();
  
 	 std.process.system(batfilepath);
 
 	std.file.remove(batfilepath);
-}
 
+}
 
 string getshortpath(string fn)
 {
@@ -96,4 +105,14 @@ string getshortpath(string fn)
 		return to!string(s[0..len]);
 	}
 } 
+
+void ShowUsage()
+{
+	writeln("\ndflexe written by FrankLIKE,and study by Christopher E. Miller\n");
+	writeln("Usage:\n"
+		"   dflexe [<switches...>] <files...>\n\n"
+		~" for example: dflexe app.d \n\n");
+	writeln("Switches:\n"
+		"   -release   Build files's Release version(Default version is 'debug').\n");
+}
  
