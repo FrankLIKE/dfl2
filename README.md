@@ -10,7 +10,7 @@ The latest features:
 ---
 1、dfl can be used in Visual Studio .net (here VS 2010)， whose intellisense will help you very well(to look at the Screenshot).
 
-2、dfl can be used in DUB. 
+2、dfl can be used in DUB:dub fetch dfl2,and you will run the build.bat in the path(C:\Users\[yourUserName]\AppData\Roaming\dub\packages\dfl2-1.0.1)
 
 How to get the libs or exe files:
 ---
@@ -33,5 +33,9 @@ Now can debug in VD 0.3.39
 
   Screenshot:
 ---
+   in DUB:
+  ![dfl2 In DUB](https://raw.githubusercontent.com/FrankLIKE/dfl2/master/Images/dub_build.png)
+   
+   in VS2010
   ![dfl's intellisense in VS2010](https://raw.githubusercontent.com/FrankLIKE/dfl2/master/Images/dflpart.png)
 
