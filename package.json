@@ -1,66 +1,74 @@
 {
-	"name": "dfl2",
-	"description" : "dfl2 IS A GUI  only for Windows,now it can be built by Dub and Visual Studio .NET, such as VS 2010.",
-	"homepage": "https://github.com/FrankLike/dfl2",
-	"license" : "LGPL-3.0",
-	"authors" : ["Christopher E. Miller"],
-	"dependencies" : {
-	},
- 
-	"configurations" : [
-	 	{
-			"name": "dfl_debug",
-			"targetType": "library",
-			 "targetPath" : "debug",
+	"version": "1.0.1",
+	"description": "dfl2 is a GUI library for Windows,now it can be built by DUB and Visual Studio .NET(such as VS 2010).",
+	"authors": [
+		"Christopher E. Miller"
+	],
+	"importPaths": [
+		"source/"
+	],
+	"license": "LGPL-3.0",
+	"configurations": [
+		{
 			"targetName": "dfl_debug",
-            "libs":[
-            		"ole32",
-            		"oleAut32",
-            		"gdi32",
-            		"comctl32",
-            		"comdlg32",
-            		"advapi32",
-            		"uuid",
-            		"ws2_32"
-            		]
-		},
-			 
-		{
-			"name": "dfl",
+			"workingDirectory": "debug",
+			"targetPath": "debug",
+			"libs": [
+				"ole32",
+				"oleAut32",
+				"gdi32",
+				"comctl32",
+				"comdlg32",
+				"advapi32",
+				"uuid",
+				"ws2_32"
+			],
 			"targetType": "library",
-			 "targetPath" : "release",
-			"targetName": "dfl",
-            "libs":[
-            		"ole32",
-            		"oleAut32",
-            		"gdi32",
-            		"comctl32",
-            		"comdlg32",
-            		"advapi32",
-            		"uuid",
-            		"ws2_32"
-            		]
+			"name": "dfl_debug"
 		},
 		{
-			"name": "dflexe",
-			"targetType": "executable",
-			 "targetPath" : "release",
-			"mainSourceFile": "source/dfl_exe/dfl_exe.d",
-			"lflags": ["/subsystem:console"],
-			"targetName": "dfl_Release",
-			 "libs":[
-					"dfl",
-			 		"ole32",
-            		"oleAut32",
-            		"gdi32",
-            		"comctl32",
-            		"comdlg32",
-            		"advapi32",
-            		"uuid",
-            		"ws2_32"
-			 ]
+			"targetName": "dfl",
+			"workingDirectory": "release",
+			"targetPath": "release",
+			"libs": [
+				"ole32",
+				"oleAut32",
+				"gdi32",
+				"comctl32",
+				"comdlg32",
+				"advapi32",
+				"uuid",
+				"ws2_32"
+			],
+			"targetType": "library",
+			"name": "dfl"
 		},
-
-	]
+		{
+			"targetName": "dfl_Release",
+			"workingDirectory": "release",
+			"mainSourceFile": "source/dfl_exe/dfl_exe.d",
+			"targetPath": "release",
+			"libs": [
+				"dfl",
+				"ole32",
+				"oleAut32",
+				"gdi32",
+				"comctl32",
+				"comdlg32",
+				"advapi32",
+				"uuid",
+				"ws2_32"
+			],
+			"targetType": "executable",
+			"lflags": [
+				"/subsystem:console"
+			],
+			"name": "dflexe"
+		}
+	],
+	"homepage": "https://github.com/FrankLike/dfl2",
+	"sourcePaths": [
+		"source/"
+	],
+	"name": "dfl2"
 }
-
