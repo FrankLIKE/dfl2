@@ -60,7 +60,6 @@ void buildExe(string[] args)
 			case "gui","windows","winexe":
 				strWindow =" -L/SUBSYSTEM:WINDOWS ";
 				bUseDfl = true;
-				strAddLib = strDflLib~strWinLib;
     			strAddArgs = strAddArgsdfl;
 				break;
 
@@ -116,6 +115,11 @@ void buildExe(string[] args)
 	{
 		writeln("Please input *.d file");
 		return;
+	}
+
+	if(bUseDfl)
+	{
+		strAddLib = strDflLib~strWinLib;
 	}
 	
 	buildExe();

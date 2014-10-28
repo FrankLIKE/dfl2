@@ -7,33 +7,10 @@
 		"Christopher E. Miller","FrankLIKE"
 	],
 	"homepage": "https://github.com/FrankLIKE/dfl2",
-	"importPaths": [
-		"source/"
-	],
-	"configurations": [
-		{
-			"name": "dfl_debug",
+	"importPaths": ["source/"],
+	"targetType": "library",
 			"targetName": "dfl_debug",
-			"targetType": "library",
 			"targetPath": "debug",
-			"source":["source/dfl","source/dfl/internal"],
-			"libs": [
-				"ole32",
-				"oleAut32",
-				"gdi32",
-				"comctl32",
-				"comdlg32",
-				"advapi32",
-				"uuid",
-				"ws2_32"
-			]
-		},
-		{
-			"name": "dfl",
-			"targetType": "library",
-			"targetName": "dfl",
-			"targetPath": "release",
-			"source":["source/dfl","source/dfl/internal"],
 			"libs": [
 				"ole32",
 				"oleAut32",
@@ -44,22 +21,6 @@
 				"uuid",
 				"ws2_32"
 			],
-		},
-		{
-			"name": "dflexe",
-			"targetName": "dflexe",
-			"workingDirectory": "release",
-			"mainSourceFile": "othersource/dflexe/source/dflexe.d",
-			"buildTypes":"release",
-			"targetPath": "release",
-			"libs": ["dfl"],
-			"targetType": "executable",
-			"lflags": [
-				"/subsystem:console"
-			],
+			
 
-		}
-	],
-
-	
 }

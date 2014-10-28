@@ -6,7 +6,7 @@
 	"homepage": "https://github.com/FrankLIKE/dfl2",
 	"targetName": "dco",
 	"mainSourceFile": "source/dco.d",
-	"targetPath": "..\\..\\release",
+	"targetPath": "..\\..\\debug",
 	"targetType": "executable",
 	"importPaths": ["source/"],
 	"lflags": ["/su:console"],

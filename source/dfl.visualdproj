@@ -122,7 +122,7 @@
   <isSolaris>0</isSolaris>
   <scheduler>0</scheduler>
   <useDeprecated>0</useDeprecated>
-  <errDeprecated>1</errDeprecated>
+  <errDeprecated>0</errDeprecated>
   <useAssert>0</useAssert>
   <useInvariants>0</useInvariants>
   <useIn>0</useIn>
@@ -134,9 +134,9 @@
   <useInline>0</useInline>
   <release>1</release>
   <preservePaths>0</preservePaths>
-  <warnings>1</warnings>
+  <warnings>0</warnings>
   <infowarnings>0</infowarnings>
-  <checkProperty>1</checkProperty>
+  <checkProperty>0</checkProperty>
   <genStackFrame>0</genStackFrame>
   <pic>0</pic>
   <cov>0</cov>

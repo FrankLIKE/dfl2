@@ -5,11 +5,11 @@
 	"homepage": "https://github.com/FrankLIKE/dfl2",
 	"targetName": "dflexe",
 	"mainSourceFile": "source/dflexe.d",
-	"targetPath": "..\\..\\release",
+	"targetPath": "../../debug",
 	"targetType": "executable",
-	"importPaths": ["source/"],
+	"importPaths": ["../../source"],
 	"libs": [
-				"dfl",
+				"../../debug/dfl_debug",
 				"ole32",
 				"oleAut32",
 				"gdi32",
@@ -19,6 +19,5 @@
 				"uuid",
 				"ws2_32"
 			],
-	"lflags": ["/su:console"]
-
+	"lflags": ["/su:console:4"]
 }

@@ -24,6 +24,7 @@ How to get the libs or exe files:
   	dub fetch dfl2 --local 
   	cd dfl2
   	build
+3、If you want to get the release version ,use the vs2010 please.
 
 New thing(only for test):  dco.exe
 ---
@@ -32,6 +33,7 @@ New thing(only for test):  dco.exe
 How to use the 'dco':
 --- 
   dco app.d
+
   dco ap.d -gui
 
 Now can debug in VD 0.3.39
