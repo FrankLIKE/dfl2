@@ -25,13 +25,14 @@ How to get the libs or exe files:
   	cd dfl2
   	build
 
-New thing(only for test):  dflexe.exe 
+New thing(only for test):  dco.exe
 ---
-'dflexe.exe' can create the batch processing info ,like the old the 'dfl.exe':
+'dco.exe' can create the batch processing info ,like the old the 'dfl.exe':
 
-How to use the 'dflexe':
+How to use the 'dco':
 --- 
-  dflexe app.d
+  dco app.d
+  dco ap.d -gui
 
 Now can debug in VD 0.3.39
 ---

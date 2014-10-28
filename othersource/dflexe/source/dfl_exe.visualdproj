@@ -86,8 +86,8 @@
   <cv2pdbOptions />
   <objfiles />
   <linkswitches />
-  <libfiles>..\Debug\dfl.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib</libfiles>
-  <libpaths>..\Debug</libpaths>
+  <libfiles>..\..\..\source\Debug\dfl_debug.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib</libfiles>
+  <libpaths>..\..\..\source\Debug</libpaths>
   <deffile />
   <resfile />
   <exefile>$(OutDir)\$(ProjectName)_debug.exe</exefile>
@@ -122,7 +122,7 @@
   <isSolaris>0</isSolaris>
   <scheduler>0</scheduler>
   <useDeprecated>0</useDeprecated>
-  <errDeprecated>0</errDeprecated>
+  <errDeprecated>1</errDeprecated>
   <useAssert>0</useAssert>
   <useInvariants>0</useInvariants>
   <useIn>0</useIn>
@@ -134,9 +134,9 @@
   <useInline>0</useInline>
   <release>1</release>
   <preservePaths>0</preservePaths>
-  <warnings>0</warnings>
+  <warnings>1</warnings>
   <infowarnings>0</infowarnings>
-  <checkProperty>0</checkProperty>
+  <checkProperty>1</checkProperty>
   <genStackFrame>0</genStackFrame>
   <pic>0</pic>
   <cov>0</cov>
@@ -184,8 +184,8 @@
   <cv2pdbOptions />
   <objfiles />
   <linkswitches />
-  <libfiles>..\release\dfl.lib  ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib  advapi32.lib uuid.lib ws2_32.lib</libfiles>
-  <libpaths>..\release</libpaths>
+  <libfiles>..\..\..\source\release\dfl.lib  ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib  advapi32.lib uuid.lib ws2_32.lib</libfiles>
+  <libpaths>..\..\..\source\release</libpaths>
   <deffile />
   <resfile />
   <exefile>$(OutDir)\$(ProjectName).exe</exefile>

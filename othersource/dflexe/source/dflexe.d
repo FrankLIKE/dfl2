@@ -5,6 +5,7 @@ import std.path;
 import std.stream;
 import dfl.application;
 import std.conv;
+import std.string;
 private import dfl.internal.winapi, dfl.internal.utf;//dfl.all, 
 
 alias dfl.internal.winapi.ShellExecuteA ShellExecuteA;
@@ -37,13 +38,16 @@ enum Flags: DWORD
 string importdir,startpath, basepath;
 string dmdpath, dmdpath_windows = "\0";
 string strDebug="-debug";
+string strWindow="SUBSYSTEM:WINDOWS";
+string strDFLlib="dfl_debug.lib";
+string strDFile="";
 void main(string[] args)
 {
 	startpath = getshortpath(Application.startupPath);
 	if(args.length <2 || (args.length == 2 && (args[1]=="-h" || args[1]=="-help")))
 	{
 		ShowUsage();
-		return;
+		 return;
 	}
 	 
 	buildExe(args);
@@ -54,20 +58,55 @@ void buildExe(string[] args)
 	string batfilepath = std.path.buildPath(startpath, "exe.bat");
 
 	scope batf = new BufferedFile(batfilepath, FileMode.OutNew);
-	
-	if(args.length ==3)
+	string c;
+	int i;
+	foreach(arg;args)
 	{
-		strDebug =args[2];
+		c = toLower(arg);
+		i = c.indexOf('-');
+		if(i != -1)
+		{
+			c=c[i+1 .. c.length];
+		}
+		switch(c)
+    	{
+    		case "debug":
+				strDFLlib = "dfl_debug.lib";
+				break;
+			case "release":
+				strDFLlib = "dfl.lib";
+				strDebug ="-"~c.idup;
+			break;
+			case "gui","windows","winexe":
+				strWindow ="SUBSYSTEM:WINDOWS";
+				break;
+    		case "console","con","exe":
+    			strWindow ="su:console:4";
+    			break;
+    		default:
+				if(c.indexOf(".d") !=-1)
+				{
+					strDFile ~=" ";
+					strDFile~=arg;
+				}
+    		break;
+    	}
 	}
  
-    string buildstr ="dmd -de -w -property -X -I$(DMDInstallDir)windows\\import dfl_debug.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib -L/SUBSYSTEM:WINDOWS "~args[1]~" "~strDebug~"\r\n";// 
+    if(strDFile == "")
+	{
+		writeln("Please input *.d file");
+		return;
+	}
+	string strwinLib = " ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib"; 
+    string buildstr ="dmd -de -w -property -X -I$(DMDInstallDir)windows\\import "~strDFLlib~strwinLib~" -L/"~strWindow~" "~strDFile~" "~strDebug~"\r\n";// 
 	batf.writeString(buildstr);
 	batf.writeString("\r\n");
 	batf.close();
- 
+
 	 std.process.system(batfilepath);
 
-	std.file.remove(batfilepath);
+	//std.file.remove(batfilepath);
 
 }
 
@@ -113,6 +152,8 @@ void ShowUsage()
 		"   dflexe [<switches...>] <files...>\n\n"
 		~" for example: dflexe app.d \n\n");
 	writeln("Switches:\n"
-		"   -release   Build files's Release version(Default version is 'debug').\n");
+		"   -release   Build files's Release version(Default version is 'debug').\n"~
+		"   -con	   output to Console(Default 'windows').\n");
+		
 }
  

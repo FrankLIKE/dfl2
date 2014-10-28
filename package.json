@@ -1,18 +1,22 @@
 {
+	"name": "dfl2",
 	"version": "1.0.1",
 	"description": "dfl2 is a GUI library for Windows,now it can be built by DUB and Visual Studio .NET(such as VS 2010).",
+	"license": "LGPL-3.0",
 	"authors": [
-		"Christopher E. Miller"
+		"Christopher E. Miller","FrankLIKE"
 	],
+	"homepage": "https://github.com/FrankLIKE/dfl2",
 	"importPaths": [
 		"source/"
 	],
-	"license": "LGPL-3.0",
 	"configurations": [
 		{
+			"name": "dfl_debug",
 			"targetName": "dfl_debug",
-			"workingDirectory": "debug",
+			"targetType": "library",
 			"targetPath": "debug",
+			"source":["source/dfl","source/dfl/internal"],
 			"libs": [
 				"ole32",
 				"oleAut32",
@@ -22,14 +26,14 @@
 				"advapi32",
 				"uuid",
 				"ws2_32"
-			],
-			"targetType": "library",
-			"name": "dfl_debug"
+			]
 		},
 		{
+			"name": "dfl",
+			"targetType": "library",
 			"targetName": "dfl",
-			"workingDirectory": "release",
 			"targetPath": "release",
+			"source":["source/dfl","source/dfl/internal"],
 			"libs": [
 				"ole32",
 				"oleAut32",
@@ -40,35 +44,22 @@
 				"uuid",
 				"ws2_32"
 			],
-			"targetType": "library",
-			"name": "dfl"
 		},
 		{
-			"targetName": "dfl_Release",
+			"name": "dflexe",
+			"targetName": "dflexe",
 			"workingDirectory": "release",
-			"mainSourceFile": "source/dfl_exe/dfl_exe.d",
+			"mainSourceFile": "othersource/dflexe/source/dflexe.d",
+			"buildTypes":"release",
 			"targetPath": "release",
-			"libs": [
-				"dfl",
-				"ole32",
-				"oleAut32",
-				"gdi32",
-				"comctl32",
-				"comdlg32",
-				"advapi32",
-				"uuid",
-				"ws2_32"
-			],
+			"libs": ["dfl"],
 			"targetType": "executable",
 			"lflags": [
 				"/subsystem:console"
 			],
-			"name": "dflexe"
+
 		}
 	],
-	"homepage": "https://github.com/FrankLike/dfl2",
-	"sourcePaths": [
-		"source/"
-	],
-	"name": "dfl2"
+
+	
 }
