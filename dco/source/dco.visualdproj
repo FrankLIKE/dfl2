@@ -90,7 +90,7 @@
   <libpaths />
   <deffile />
   <resfile />
-  <exefile>$(OutDir)\$(ProjectName).exe</exefile>
+  <exefile>$(OutDir)\$(ProjectName)_debug.exe</exefile>
   <useStdLibPath>1</useStdLibPath>
   <cRuntime>2</cRuntime>
   <additionalOptions />

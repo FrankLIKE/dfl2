@@ -4,13 +4,10 @@
  
 dub  --force
 
-cd source\dco
+cd dco
 dub --force
 cd..
-cd..
-cd othersource\dflexe
+cd dflexe
 dub --force
 cd..
-cd..
-@echo  dflexe will not use again.....
 @pause

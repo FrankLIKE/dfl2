@@ -12,35 +12,40 @@ The latest features:
 
 2、dfl can be used in DUB:
 
+3、dfl can be build by dco.
+
 How to get the libs or exe files:
 ---
-1、Open the dfl.sln, and run the projects to get them in 'debug' folder and 'release' folder(Now,auto copy to the '$(DMDInstallDir)windows\lib' OR 'bin' folder ).
+1、Double click the 'dcobuild.bat', and input 'dcobuild.bat',to get them in the folder.
 
-2、Double click the cmd.exe, and input 'build.bat' to get them in 'debug' folder and 'release' folder.
-
+2、dub fetch dfl2 --local and run the dubbuild.bat in the path, to get them in 'debug' folder and 'release' folder.
    or 
-     dub fetch dfl2,and you run the build.bat in the path(C:\Users\[yourUserName]\AppData\Roaming\dub\packages\dfl2-1.0.1)
-  or 
-  	dub fetch dfl2 --local 
-  	cd dfl2
-  	build
-3、If you want to get the release version ,use the vs2010 please.
+     dub fetch dfl2,and run the dubbuild.bat in the path(C:\Users\[yourUserName]\AppData\Roaming\dub\packages\dfl2-1.0.3)
 
-New thing(only for test):  dco.exe
+3、Open the dfl.sln, and run the projects to get them in 'debug' folder and 'release' folder(Now,auto copy to the '$(DMDInstallDir)windows\lib' OR 'bin' folder ).
+	 
+note:  If you want to get the release version ,use dcobuild.bat. or vs2010 please.
 ---
-'dco.exe' can create the batch processing info ,like the old the 'dfl.exe':
+
+New thing :  dco.exe
+---
+'dco.exe' can create the batch processing info :
 
 How to use the 'dco':
 --- 
   dco app.d
 
-  dco ap.d -gui
+  dco app.d -gui
 
 Now can debug in VD 0.3.39
 ---
 
   Screenshot:
 ---
+   in dco:
+
+  ![dfl2 In dco](https://raw.githubusercontent.com/FrankLIKE/dfl2/master/Images/dco_build.png)
+
    in DUB:
 
   ![dfl2 In DUB](https://raw.githubusercontent.com/FrankLIKE/dfl2/master/Images/dub_build.png)
