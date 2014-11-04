@@ -8,18 +8,6 @@
 	"homepage": "https://github.com/FrankLIKE/dfl2",
 	"importPaths": ["source/"],
 	"targetType": "library",
-			"targetName": "dfl_debug",
-			"targetPath": "debug",
-			"libs": [
-				"ole32",
-				"oleAut32",
-				"gdi32",
-				"comctl32",
-				"comdlg32",
-				"advapi32",
-				"uuid",
-				"ws2_32"
-			],
-			
-
+	"targetName": "dfl_debug",
+	"targetPath": "debug"
 }

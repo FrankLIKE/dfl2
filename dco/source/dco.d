@@ -382,6 +382,7 @@ void buildExe(string[] args)
    {
 	   strOtherArgs = " -of" ~ strTargetLib;
 	   strAddLib = strLibs;
+	  strTargetFileName = getcwd() ~ "\\" ~ strTargetLib;
    }
  
 	if(bUseSpecialLib)
@@ -437,19 +438,25 @@ void buildExe()
 void copyFile()
 {
 	string strcopy;
-	if(!exists(strTargetFileName)) return;
+	 if(!exists(strTargetFileName)) 
+	 {
+	 	writeln(strTargetFileName," is not exists,stop copy.");
+	   return;
+	}
+	/*
 	if( sourceLastUpdateTime >= getTargetTime(strTargetFileName))
 	{
 		writeln(strTargetFileName," is up to date.");
       return;
     }
+    */
 	if(strTargetFileName.indexOf("exe") != -1)
 	{
 		//copy(strTargetFileName,strDCEnv); //
 		strcopy = "copy " ~ strTargetFileName~" " ~ strDCEnv;
 	}
 	else
-	{
+	{ 
 		string strDCLibPath = strDCEnv[0..(strDCEnv.length - "bin".length)].idup ~ "lib"; 
 		//copy(strDCEnv,strDCLibPath);
 		strcopy = "copy " ~ strTargetFileName ~ " " ~ strDCLibPath;
@@ -468,9 +475,11 @@ void copyFile()
   
 bool findFiles()
 { 
+	int i=0;
 	bool bPackage = false; 
 	auto packages = dirEntries(".","{package.d,all.d}",SpanMode.depth);
-	if(packages.count >0) bPackage = true;
+	foreach(p; packages){i++;}
+	bPackage = (i > 0);
 	auto dFiles = dirEntries(".","*.{d,di}",SpanMode.depth);
 	int icount =0;
     SysTime fileTime;
@@ -578,7 +587,7 @@ Switches:
 void ReadDFile(string dFile,bool bPackage)
 { 
 	 auto file = File(dFile); 
-	 scope(failure)  file.close();
+	 scope(exit)  file.close();
 	 auto range = file.byLine();
 	 int icount = 0;
     foreach (line; range)
@@ -604,12 +613,12 @@ void ReadDFile(string dFile,bool bPackage)
         icount++;
         if(icount >100) break;
     }
-    file.close(); 
 }
 
 void initNewConfigFile()
 {
 	auto ini = File("dco.ini","w"); 
+	scope(failure) ini.close();
 	ini.writeln(";DC=dmd");
 	ini.writeln("DC=");
 	ini.writeln(";DCStandardEnvBin=dmd2\\windows\\bin");
@@ -622,8 +631,8 @@ void initNewConfigFile()
 	ini.writeln(";lflags=-L/SUBSYSTEM:WINDOWS");
 	ini.writeln("lflags=");
 	ini.close();
- /*
-	auto pid = spawnProcess("notepad.exe dco.ini");
+ 
+	auto pid = spawnProcess(["notepad.exe","dco.ini"]);
     auto dmd = tryWait(pid);
 	if (dmd.terminated)
 	{
@@ -631,7 +640,7 @@ void initNewConfigFile()
 		else writeln("open dco.ini failed");
 	}
 	else writeln("Still opening...");
-	*/
+	
 }
 
 void readInJson()
