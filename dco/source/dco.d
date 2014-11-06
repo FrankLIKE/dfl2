@@ -34,9 +34,9 @@ Authors:   FrankLIKE
 
 Source: $(dco.d)
 
-version: v0.0.3
+version: v0.0.5
 Created Time:2014-10-27
-Modify Time:2014-10-31~2014-11-3
+Modify Time:2014-10-31~2014-11-5
 */
 module dco;
 /// dco 
@@ -246,12 +246,16 @@ bool checkIsUpToDate()
         {
 			if(!checkIsUpToDate(strDCEnvFile ,targetTime))
 			{
-				string strcopy ="copy dco.exe " ~ strDCEnvFile;
-				writeln(strcopy);
-				auto status = system(strcopy);
-				if(status !=0)
+				auto files = dirEntries(".","dco.{exe,ini}",SpanMode.shallow);
+				foreach(d;files)
 				{
-					writeln("copy failed.");
+					string strcopy ="copy " ~ d ~" " ~ strDCEnv;
+					writeln(strcopy);
+					auto status = system(strcopy);
+					if(status !=0)
+					{
+						writeln("copy failed.");
+					}
 				}
 			 //copy(strTargetFileName,strDCEnvFile);
 			}
@@ -405,10 +409,9 @@ void buildExe()
 	}
 	strDC ~= " ";
 	strDC ~= strTargetTypeSwitch;
-	string strCommon = strAddLib ~ strTargetLflags ~ strDFile ~ strDebug;
- 
-    string buildstr = strDC ~ strAddArgsdfl ~ strOtherArgs ~ " " ~ strImportDefault ~ strCommon ~ "\r\n";
-	buildstr = bUseSpecialLib ? buildstr : strDC ~ strAddArgs ~ strOtherArgs ~ " " ~ strImport ~ strCommon;
+	string strCommon = strOtherArgs ~" " ~ strImportDefault ~ strImport ~ " " ~ strAddLib ~ strTargetLflags ~ strDFile ~ strDebug;
+    string buildstr = strDC ~ strAddArgsdfl ~ strCommon ~ "\r\n";
+	buildstr = bUseSpecialLib ? buildstr : strDC ~ strCommon;
 	if(bDisplayBuildStr)
 	{
 		writeln(buildstr);
