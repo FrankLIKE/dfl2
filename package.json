@@ -1,6 +1,6 @@
 {
 	"name": "dfl2",
-	"description": "dfl2 is a GUI library for Windows,now it can be built by DUB and Visual Studio .NET(such as VS 2010).",
+	"description": "dfl2 is a GUI library for Windows,now it can be built by dco, DUB or Visual Studio .NET(such as VS 2010).",
 	"license": "LGPL-3.0",
 	"authors": [
 		"Christopher E. Miller","FrankLIKE"
