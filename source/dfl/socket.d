@@ -28,7 +28,7 @@ private
 	alias InternetHost DInternetHost;
 	alias InternetAddress DInternetAddress;
 	
-	socket_t getSocketHandle(Socket sock)
+	socket_t getSocketHandle(Socket sock) @nogc nothrow
 	{
 		return sock.handle;
 	}
@@ -54,7 +54,7 @@ private
 	}
 	
 	
-	extern(Windows) int WSAAsyncSelect(socket_t s, HWND hWnd, UINT wMsg, int lEvent);
+	extern(Windows) int WSAAsyncSelect(socket_t s, HWND hWnd, UINT wMsg, int lEvent) nothrow @nogc;
 }
 
 
@@ -107,12 +107,13 @@ void registerEvent(DflSocket sock, EventType events, RegisterEventCallback callb
 }
 
 
-void unregisterEvent(DflSocket sock) // deprecated
+void unregisterEvent(DflSocket sock) @trusted @nogc nothrow// deprecated
 {
-	WSAAsyncSelect(getSocketHandle(sock), hwNet, 0, 0);
-	
+	 WSAAsyncSelect(getSocketHandle(sock), hwNet, 0, 0);
+	 
 	//delete allEvents[getSocketHandle(sock)];
-	allEvents.remove(getSocketHandle(sock));
+ if(getSocketHandle(sock) in allEvents)
+  allEvents.remove(getSocketHandle(sock)); 
 }
 
 
@@ -142,11 +143,11 @@ class AsyncSocket: DflSocket // docmain
 	
 	/// ditto
 	// For use with accept().
-	protected this()
+	
+	protected this() @safe pure nothrow
 	{
 	}
-	
-	
+ 
 	///
 	void event(EventType events, RegisterEventCallback callback)
 	{
@@ -158,15 +159,15 @@ class AsyncSocket: DflSocket // docmain
 	{
 		return new AsyncSocket;
 	}
-	
+	 
 	
 	override void close()
 	{
 		unregisterEvent(this);
 		super.close();
 	}
-	
-	
+ 
+
 	override @property bool blocking() const // getter
 	{
 		return false;

@@ -1,6 +1,6 @@
 dfl2
 ====
-dfl2 is a GUI library for windows,which is based on D2 ,now D2.066.1.
+dfl2 is a GUI library for windows,which is based on D2 ,now D2.067b1.
 
 linker libs:
 ---
@@ -54,8 +54,11 @@ or
 or
 
   dco app.d -gui 
-
+ 
 more info : dco -h
+
+more examples: git clone https://github.com/FrankLIKE/dfl-examples-d2
+--
 
   Screenshot:
 ---

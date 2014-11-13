@@ -4,25 +4,26 @@
 This is a build tool,compile *.d to exe or lib,and help to build dfl2 gui (or other you like).
 now default DC is dmd ,default platform is windows.
 
-If your DC is dmd, dco can start no config file. 
+If your DC is dmd, dco can start only 'dco.ini' config file. 
 
 Compiler dco.d :dmd dco.d -release,and dco ↓,
 
 Usage:
-  "use before" run: dco -ini,  config some infos to 'dco.ini' file,';' or '#' means you can do as it.Then copy dco.ini to your PATH: such as dmd's config file:sc.ini.
-  And dco.exe can auto copy itsself to EnvPath,such as dmd.exe 's path: dmd2\window\bin.
-  after that,you can run the 'dco.exe'  anywhere.
+  Config some info to 'dco.ini' file,';' or '#' means you can do as it.Then copy dco.ini to your PATH: such as dmd's config file:sc.ini.
+  And dco.exe can auto copy itsself to EnvPath,that also is  dmd.exe 's path: dmd2\window\bin.
+  After that,you can run the 'dco.exe'  anywhere.
+  If not found 'dco.ini',run: dco -ini,please.
   
 For example:
     to get the debug version( -release to get another)
 
-	build some *.d to lib or exe 			: dco ↓
-	build for libs 	such as dfl,dgui        : dco  -lib
-	build for app.d use dfl2				: dco  -gui
-	build app.d use dfl2 for console		: dco  -con
-	build  one app.d in many *.d    		: dco app.d
-	build lib and copy to libs				: dco -lib -c
-	build by custom							: dco -arg -addlib -lib -c
+	build some *.d to lib or exe 			 : dco ↓
+	build  one app.d in many *.d    		 : dco app or  dco app.d
+	build for libs 	such as dfl,dgui         : dco  -lib
+	build for app.d use dfl2				 : dco  -gui
+	build app.d use dfl2 for console		 : dco  -con
+	build lib and copy to libs				 : dco -lib -c
+	build by custom	and copy to libs         : dco -arg -addlib -lib -c
 
     if your exe's file works on console,you should add '-con' or '-console'. 
     
@@ -33,10 +34,9 @@ License:   $(LGPL-3.0).
 Authors:   FrankLIKE
 
 Source: $(dco.d)
-
-version: v0.0.5
+ 
 Created Time:2014-10-27
-Modify Time:2014-10-31~2014-11-5
+Modify Time:2014-10-31~2014-11-13
 */
 module dco;
 /// dco 
@@ -50,10 +50,11 @@ import	std.exception;
 import  std.json;
 import std.exception;
 
+string strVersion ="v0.0.6";
 string	strAddArgs,strAddArgsdfl = " -de -w -property -X ";
 string	strDebug,strDebugDefault=" -debug";
 string	strTargetLflags,strConsole=" -L/su:console:4 ",strWindows = " -L/SUBSYSTEM:WINDOWS ";
-string	strTargetLib,SpecialLib = "dfl",strWinLibs=" ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib ";// $(DMDInstallDir)windows\\lib\\
+string	strTargetLib,SpecialLib = "dfl",strWinLibs=" ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib "; 
 string	strDFile;
 string	strAddLib;
 string	strOtherArgs;
@@ -64,7 +65,6 @@ SysTime sourceLastUpdateTime,targetTime;
 
 bool	bUseSpecialLib =false,bDebug =true,bBuildSpecialLib =false;
 bool	bCopy =false ,bDisplayBuildStr=false,bDisplayCopyInfo =true;
-bool	bDCO = false; 	
 bool	bForce = false;
 bool 	bAssignTarget =false;
 
@@ -77,7 +77,6 @@ string strPackageName,strArgs,strTargetName,strTargetType ="exe",strDC,strDCStan
  
 void main(string[] args)
 {
-	
 	if(!findDCEnv()) return;
 	// readInJson();
 	if(!checkArgs(args))
@@ -108,32 +107,42 @@ void main(string[] args)
 bool findDCEnv()
 {
 	 if(!readConfig(configFile)) return false;
-	auto path = environment["PATH"];
-	 
-	ptrdiff_t i = path.indexOf(strDCStandardEnvBin);
+	string strNoDC = "Not found '"~strDC~"' in your computer,please setup it.",strTemp,strTempFile;
+	string strDCExe = "\\" ~ strDC.stripRight() ~ ".exe";
+	string strFireWall = " Maybe FirWall stop checking the " ~ strDCExe ~ ",please stop it.";
+	
 	int len = strDCStandardEnvBin.length;
-	string strNoDC = "Not found "~strDC~" in your computer,please setup it.";
-	if(i != -1)
-	{
-		path = path[0 .. i+len].idup;
 
-		ptrdiff_t j = path.lastIndexOf(";");
-		strDCEnv = path[j+1 .. i+len];
-	 
-		if(exists(strDCEnv~"\\"~strDC.stripRight()~".exe"))
+	auto path = environment["PATH"];
+	string[] strDCs = path.split(";");
+	foreach(s;strDCs)
+	{
+		ptrdiff_t i = path.indexOf(strDCStandardEnvBin);
+		if(i != -1)
 		{
-			strDCEnvFile = strDCEnv ~ "\\dco.exe";
-			return true;
-		}
-		else
-		{
-			writeln("\nMaybe FirWall stop the 'dco',that can't  know the 'dco.exe' exists.");
-			return false;
+			if(exists(s ~ strDCExe))
+			{ 
+				strTempFile = s ~ "\\dco.exe";
+				if(exists(strTempFile))
+				{
+					strDCEnv = s;
+					strDCEnvFile =  s ~ strDCExe;
+				   break;
+			    }
+			}
 		}
 	}
- 
-	writeln(strNoDC);
-	return false;
+
+	if(strDCEnvFile =="")
+	{
+		writeln(strNoDC);
+		return false;
+	}
+	else
+	{
+		//writeln(strDC ~ " is " ~ strDCEnvFile);
+		return true;
+	}
 }
 
 bool readConfig(string configFile)
@@ -143,14 +152,14 @@ bool readConfig(string configFile)
 		string strConfigPath = thisExePath();
 		strConfigPath = strConfigPath[0..strConfigPath.lastIndexOf("\\")].idup;
 		strConfigPath ~= "\\" ~ configFile;
- 
-		if(!exists(strConfigPath)) 
+
+		if(!enforce(exists(strConfigPath),"'FireWall' stop to access the 'dco.ini',please stop it."))
 		{
-			writeln("if you known dco.ini is there,maybe your 'FireWall' stop to access the 'dco.ini',please stop it.Otherwise,dco not found dco.ini, it will help you to  create a init dco.ini file ,but you should input something in it.");
+			writeln("dco not found dco.ini, it will help you to  create a init dco.ini file ,but you should input something in it.");
 			initNewConfigFile();
 			return false;
 		}  
-	    
+	   
 		auto file = File(strConfigPath); 
 		scope(failure) file.close();
 		auto range = file.byLine();
@@ -180,27 +189,32 @@ bool readConfig(string configFile)
   }
 }
 
-
 bool checkArgs(string[] args)
 {
 	string c;
 	int p;
-	bool bfindD =false;
+	bool bDFile =false;
 	foreach(int i,arg;args)
 	{
+		if(i == 0) continue;
 		c = toLower(arg);
 		p = c.indexOf('-');
-		if(p != -1)
+		if(p == -1 || c.indexOf(".d") != -1)
+		{
+
+			strTargetName = c;
+ 			strDFile ~= " ";
+			strDFile ~= c;
+			bDFile = true;
+		}
+		else
 		{
 			c = c[p+1 .. $];
 		}
+
 		if(i ==0) continue;
-		if(c.indexOf(".d") != -1)
-		{
-			bfindD = true;
-		 
-		}
-		else if(c == "force")
+ 
+		if(c == "force")
 		{
 			bForce = true;
 		}
@@ -209,12 +223,12 @@ bool checkArgs(string[] args)
 			bAssignTarget = true;
 			strTargetName = c[(c.indexOf("of")+1)..$];
 		}
-		else if(c == strPackageName || c == strPackageName~"lib")
+		else if(c == strPackageName || c == strPackageName ~ "lib")
 		{
 			bAssignTarget = true;
 			bBuildSpecialLib = true;
 			strTargetTypeSwitch = " -" ~ targetTypeDefault;
-			strTargetName = c~".lib";
+			strTargetName = c ~ ".lib";
 		}
 		else if (c == "ini")
 		{
@@ -222,7 +236,7 @@ bool checkArgs(string[] args)
 			return false;
 		}
 	}
-	return bfindD;
+	return bDFile;
 }
 
 bool CheckBinFolderAndCopy() 
@@ -251,8 +265,8 @@ bool checkIsUpToDate()
 				{
 					string strcopy ="copy " ~ d ~" " ~ strDCEnv;
 					writeln(strcopy);
-					auto status = system(strcopy);
-					if(status !=0)
+					auto pid = enforce(spawnShell(strcopy.dup()),"spawnShell(strcopy.dup()) is err!");
+					if (wait(pid) != 0)
 					{
 						writeln("copy failed.");
 					}
@@ -272,17 +286,20 @@ bool checkIsUpToDate()
  
     return false;
 }
+
 SysTime getTargetTime(string strPathFile)
 {
 	 return DirEntry(strPathFile).timeLastModified;
 }
+
 void removeExe(string strPathExe)
 {
     if(exists(strPathExe))
 	{
-		if(system("del " ~ strPathExe) == 0) 
+		auto pid = enforce(spawnShell("del " ~ strPathExe.dup()),"del " ~ strPathExe.dup() ~ " Err");
+		if (wait(pid) != 0)
         {
-			writeln(strPathExe ~ ", remove  ok!");
+			writeln(strPathExe ~ ", remove  failed!");
 			return;
 		}
 	}
@@ -303,12 +320,13 @@ void buildExe(string[] args)
 	int p;
 	foreach(int i,arg;args)
 	{
+		if(i ==0) continue;
 		c = toLower(arg);
 		p = c.indexOf('-');
 		if(p != -1)
 		{
 			c = c[p+1 .. c.length];
-		}
+
 		switch(c)
     	{
 			case "h","help":
@@ -365,18 +383,10 @@ void buildExe(string[] args)
 				
 				break;
     		default:
-    		if(i ==0) continue;
-				if(c.indexOf(".d") != -1)
-				{
-					strDFile ~= " ";
-					strDFile ~= arg;
-				}
-				else
-				{
-					strOtherArgs ~= " ";
-					strOtherArgs ~= arg;
-				}
-    		break;
+				strOtherArgs ~= " ";
+				strOtherArgs ~= arg;
+				break;
+    		}
     	}
 	}
 
@@ -387,6 +397,10 @@ void buildExe(string[] args)
 	   strOtherArgs = " -of" ~ strTargetLib;
 	   strAddLib = strLibs;
 	  strTargetFileName = getcwd() ~ "\\" ~ strTargetLib;
+   }
+   else
+   {
+		strTargetFileName = getcwd() ~ "\\" ~ strTargetName;
    }
  
 	if(bUseSpecialLib)
@@ -419,15 +433,16 @@ void buildExe()
  
 	StopWatch sw;
 	sw.start();
-	auto status = system(buildstr);
-	sw.stop();
-   
-   if (status != 0)
+	auto pid =  enforce(spawnShell(buildstr.dup()),"build function is error! ");
+
+	if (wait(pid) != 0)
 	{
-		writeln("Compilation failed:\n", status);
+		writeln("Compilation failed:\n", pid);
 	}
 	else
 	{
+			sw.stop();
+   
 		writeln("\nCompile time :" , sw.peek().msecs/1000.0,"secs");
 
 		if(bCopy)
@@ -446,13 +461,7 @@ void copyFile()
 	 	writeln(strTargetFileName," is not exists,stop copy.");
 	   return;
 	}
-	/*
-	if( sourceLastUpdateTime >= getTargetTime(strTargetFileName))
-	{
-		writeln(strTargetFileName," is up to date.");
-      return;
-    }
-    */
+ 
 	if(strTargetFileName.indexOf("exe") != -1)
 	{
 		//copy(strTargetFileName,strDCEnv); //
@@ -469,13 +478,13 @@ void copyFile()
 		writeln(strcopy);
 	}
 		 
-	auto status = system(strcopy);
-	if(status !=0)
+	auto pid =  enforce(spawnShell(strcopy.dup()),"copyFile() error");
+	if (wait(pid) != 0)
 	{
 		writeln("Copy failed.");
 	}
 }
-  
+
 bool findFiles()
 { 
 	int i=0;
@@ -489,7 +498,7 @@ bool findFiles()
     DirEntry rootDE ;
   
 	foreach(d; dFiles)
-	{
+	{	 
 	    if(!bAssignTarget)
 	    {
 			if(icount == 0)
@@ -505,7 +514,7 @@ bool findFiles()
 		
 		strDFile ~= " ";
 		strDFile ~= d.name[2 ..$].idup;
-		
+		 
 		//sourceLastUpdateTime 
 		rootDE = DirEntry(d);
         if(rootDE.timeLastModified > fileTime)
@@ -528,10 +537,10 @@ bool findFiles()
 }
 
 void getTargetInfo()
-{
-	  string root_path = getcwd();
+{ 
+	string root_path = getcwd();
     string strPath;
-	auto dFiles = dirEntries(root_path,"*.{lib,exe}",SpanMode.shallow);
+	auto dFiles = dirEntries(root_path,strTargetName ~ ".{lib,exe}",SpanMode.shallow);
 	int i =0;
 	foreach(d;dFiles)
 	{
@@ -549,20 +558,22 @@ void getTargetInfo()
 		}
 		strTargetFileName = root_path ~ "\\" ~ strTargetName;
 	}
+		 
 	return;
 }
  
 void ShowUsage()
 {
 	writeln("
-dco written by FrankLIKE.
+dco build tool " ~ strVersion ~ "
+written by FrankLIKE.
 Usage:
 	dco [<switches...>] <files...>
 		  
-	for example: dco ↓ 
+	for example: dco  
 	         or: dco app.d 
 		 
-build for dfl2:	dco ↓ 
+build for dfl2:	dco  
 			or: dco -gui
 			or:	dco *.d -gui
 build for other: dco -lib

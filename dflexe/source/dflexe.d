@@ -104,7 +104,7 @@ void buildExe(string[] args)
 	batf.writeString("\r\n");
 	batf.close();
 
-	 std.process.system(batfilepath);
+	 std.process.spawnShell(batfilepath.dup());
 
 	//std.file.remove(batfilepath);
 
