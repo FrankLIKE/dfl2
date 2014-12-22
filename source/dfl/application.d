@@ -176,13 +176,14 @@ final class Application // docmain
 	// Does nothing if not supported.
 	void enableVisualStyles()
 	{
-		enum MANIFEST = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` "\r\n"
+		//string str64 = is64 ? "x64":"X86",strType = is64 ? "win32":"x64" ;
+		enum MANIFEST32 = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` "\r\n"
 			`<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">` "\r\n"
 				`<description>DFL manifest</description>` "\r\n"
 				`<dependency>` "\r\n"
 					`<dependentAssembly>` "\r\n"
 						`<assemblyIdentity `
-							`type="win32" `
+							`type="win32" ` 
 							`name="Microsoft.Windows.Common-Controls" `
 							`version="6.0.0.0" `
 							`processorArchitecture="X86" `
@@ -192,7 +193,24 @@ final class Application // docmain
 					`</dependentAssembly>` "\r\n"
 				`</dependency>` "\r\n"
 			`</assembly>` "\r\n";
-		
+			
+			enum MANIFEST64 = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` "\r\n"
+			`<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">` "\r\n"
+				`<description>DFL manifest</description>` "\r\n"
+				`<dependency>` "\r\n"
+					`<dependentAssembly>` "\r\n"
+						`<assemblyIdentity `
+							`type="x64" ` 
+							`name="Microsoft.Windows.Common-Controls" `
+							`version="7.0.0.0" `
+							`processorArchitecture="x64" `
+							`publicKeyToken="6595b64144ccf1df" `
+							`language="*" `
+						`/>` "\r\n"
+					`</dependentAssembly>` "\r\n"
+				`</dependency>` "\r\n"
+			`</assembly>` "\r\n";
+		enum MANIFEST =  MANIFEST32;//is64 ? MANIFEST64:
 		HMODULE kernel32;
 		kernel32 = GetModuleHandleA("kernel32.dll");
 		//if(kernel32)
@@ -1669,7 +1687,7 @@ final class Application // docmain
 package:
 
 
-extern(Windows) void _gcTimeout(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) nothrow
+extern(Windows) void _gcTimeout(HWND hwnd, UINT uMsg, size_t idEvent, DWORD dwTime) nothrow
 {
 	KillTimer(hwnd, Application.gctimer);
 	Application.gctimer = 0;
@@ -2539,8 +2557,8 @@ WNDPROC _superClass(HINSTANCE hinst, Dstring className, Dstring newClassName, ou
 	getInfo.hInstance = Application.getInstance();
 	
 	if(!RegisterClassA(&getInfo)) // TODO: unicode.
-		//throw new DflException("Unable to register window class '" ~ newClassName ~ "'");
-		return null;
+		 throw new DflException("Unable to register window class '" ~ newClassName ~ "'");
+		//return null;
 	return wndProc;
 }
 
@@ -2584,3 +2602,11 @@ WNDPROC superClass(HINSTANCE hinst, Dstring className, Dstring newClassName, out
 	return wndProc;
 }
 
+//NewAdd:
+public:
+
+bool is64() 
+{
+	size_t a;
+	return  a.sizeof == 8 ? true : false;
+}

@@ -134,10 +134,10 @@ template ListWrapArray(TValue, alias Array,
 	///
 	void clear()
 	{
-		ItemRemovingCallback(size_t.max, null); // Removing ALL.
+		ItemRemovingCallback(int.max, null); // Removing ALL.
 		
-		size_t iw;
-		iw = Array.length;
+		int iw;
+		iw = cast(int)Array.length;
 		if(iw)
 		{
 			static if(CLEAR_EACH)
@@ -192,7 +192,7 @@ template ListWrapArray(TValue, alias Array,
 			}
 		}
 		
-		ItemRemovedCallback(size_t.max, null); // Removed ALL.
+		ItemRemovedCallback(int.max, null); // Removed ALL.
 	}
 	
 	
@@ -255,7 +255,7 @@ template ListWrapArray(TValue, alias Array,
 		/// ditto
 		int indexOf(Dstring value)
 		{
-			foreach(size_t idx, TValue onval; Array)
+			foreach(uint idx, TValue onval; Array)
 			{
 				static if(is(TValue == TValueString))
 				{
@@ -276,7 +276,7 @@ template ListWrapArray(TValue, alias Array,
 	private final void _insert(int index, TValue value)
 	{
 		if(index > Array.length)
-			index = Array.length;
+			index = cast(int)Array.length;
 		ItemAddingCallback(index, value); // Adding.
 		static if(COW)
 		{

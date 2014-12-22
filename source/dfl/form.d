@@ -408,7 +408,7 @@ class Form: ContainerControl, IDialogResult // docmain
 				if(er.length)
 					kmsg ~= " - " ~ er;
 			}
-			throw new DflException(kmsg);
+			throw new DflException(kmsg, __FILE__, __LINE__);
 			//throw new DflException(Object.toString() ~ " creation failure"); // ?
 		}
 		

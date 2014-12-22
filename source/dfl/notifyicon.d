@@ -73,7 +73,7 @@ class NotifyIcon // docmain
 		txt = unsafeAnsi(txt); // ...
 		nid.szTip[txt.length] = 0;
 		nid.szTip[0 .. txt.length] = txt[];
-		tipLen = txt.length;
+		tipLen = cast(int)txt.length;
 		
 		if(visible)
 		{

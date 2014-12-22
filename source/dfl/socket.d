@@ -23,7 +23,7 @@ private import dfl.internal.dlib, dfl.internal.clib;
 private
 {
 	private import std.socket, core.bitop;
-	private import std.c.windows.winsock;
+	private import std.c.windows.winsock;//core.sys.windows.winsock;
 	
 	alias InternetHost DInternetHost;
 	alias InternetAddress DInternetAddress;
@@ -508,7 +508,7 @@ class SocketQueue // docmain
 		{
 			assert(!writebuf.length);
 			
-			int st;
+			size_t st;
 			if(buf.length > 4096)
 				st = 4096;
 			else
@@ -540,7 +540,7 @@ class SocketQueue // docmain
 	
 	///
 	// Number of bytes in send queue.
-	@property uint sendBytes() // getter
+	@property size_t sendBytes() // getter
 	{
 		return writebuf.length;
 	}
@@ -585,7 +585,7 @@ class SocketQueue // docmain
 		if(readbuf.length - rpos < 1024)
 			readbuf.length = readbuf.length + 2048;
 		
-		int rd = sock.receive(readbuf[rpos .. readbuf.length]);
+		size_t rd = sock.receive(readbuf[rpos .. readbuf.length]);
 		if(rd > 0)
 			rpos += cast(uint)rd;
 	}
@@ -604,7 +604,7 @@ class SocketQueue // docmain
 			else
 				buf = writebuf;
 			
-			int st = sock.send(buf);
+			size_t st = sock.send(buf);
 			if(st > 0)
 				writebuf = writebuf[st .. writebuf.length];
 		}

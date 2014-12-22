@@ -708,7 +708,7 @@ class Control: DObject, IWindow // docmain
 			}
 			else
 			{
-				return children.length;
+				return cast(int)children.length;
 			}
 		}
 		
@@ -1524,7 +1524,7 @@ class Control: DObject, IWindow // docmain
 				{
 					SendMessageA(hwnd, WM_SETCURSOR, cast(WPARAM)hwnd,
 						MAKELPARAM(
-							SendMessageA(hwnd, WM_NCHITTEST, 0, MAKELPARAM(curpt.x, curpt.y)),
+							cast(int)(SendMessageA(hwnd, WM_NCHITTEST, 0, MAKELPARAM(curpt.x, curpt.y))),
 							WM_MOUSEMOVE)
 							);
 				}
@@ -3645,9 +3645,9 @@ class Control: DObject, IWindow // docmain
 	
 	
 	///
-	static bool isMnemonic(dchar charCode, Dstring text)
+	static bool isMnemonic(dchar charCode, string text) //Dstring text
 	{
-		uint ui;
+		size_t ui;
 		for(ui = 0; ui != text.length; ui++)
 		{
 			if('&' == text[ui])
@@ -3657,7 +3657,7 @@ class Control: DObject, IWindow // docmain
 				if('&' == text[ui]) // && means literal & so skip it.
 					continue;
 				dchar dch;
-				dch = utf8stringGetUtf32char(text, ui);
+				dch = utf8stringGetUtf32char(text,ui);
 				return utf32charToLower(charCode) == utf32charToLower(dch);
 			}
 		}
@@ -5851,7 +5851,7 @@ class Control: DObject, IWindow // docmain
 	
 	
 	package final void doShow()
-	{
+	{ 
 		if(wparent) // Exclude owner.
 		{
 			SetWindowPos(hwnd, HWND.init, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW | SWP_NOACTIVATE | SWP_NOZORDER);
@@ -6369,7 +6369,7 @@ class Control: DObject, IWindow // docmain
 				if(er.length)
 					kmsg ~= " - " ~ er;
 			}
-			throw new DflException(kmsg);
+			throw new DflException(kmsg, __FILE__, __LINE__);
 			//throw new DflException(Object.toString() ~ " creation failure"); // ?
 		}
 		
@@ -6408,6 +6408,7 @@ class Control: DObject, IWindow // docmain
 			bool vis = (style & WS_VISIBLE) != 0;
 			
 			Application.creatingControl(this);
+				
 			hwnd = dfl.internal.utf.createWindowEx(exStyle, className, caption, (style & ~WS_VISIBLE), x, y,
 				width, height, parent, menu, inst, param);
 			if(!hwnd)

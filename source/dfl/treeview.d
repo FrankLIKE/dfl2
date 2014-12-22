@@ -686,9 +686,14 @@ class TreeNode: DObject
 	
 	void _reset()
 	{
-		hnode = null;
-		tview = null;
-		tparent = null;
+		/*
+		if(hnode !is null)
+			hnode = null;
+		if(tview !is null)
+			tview = null;
+		if(tparent!is null)
+			tparent = null;
+		*/
 	}
 }
 
@@ -714,7 +719,7 @@ class TreeNodeCollection
 		}
 		else
 		{
-			i = _nodes.length;
+			i = cast(int)_nodes.length;
 		}
 		
 		insert(i, node);
@@ -959,7 +964,7 @@ class TreeNodeCollection
 				}
 				else
 				{
-					m.lParam = cast(LPARAM)TVI_ROOT;
+					m.lParam =cast(LPARAM)TVI_ROOT;
 					tview.prevWndProc(m);
 					foreach(TreeNode node; nodes)
 					{
@@ -985,7 +990,7 @@ class TreeNodeCollection
 			{
 				assert(val.hnode);
 				Message m;
-				m = Message(tview.handle, TVM_DELETEITEM, 0, cast(LPARAM)val.hnode);
+				m = Message(tview.handle, TVM_DELETEITEM, 0, cast(LPARAM)&val.hnode);//
 				tview.prevWndProc(m);
 			}
 			

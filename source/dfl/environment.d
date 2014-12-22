@@ -80,7 +80,9 @@ final class Environment // docmain
 			case VER_PLATFORM_WIN32_WINDOWS:
 				ver = new Version(osi.dwMajorVersion, osi.dwMinorVersion, LOWORD(osi.dwBuildNumber));
 				break;
-			
+			case VER_PLATFORM_X64_WINDOWS:
+				ver = new Version(osi.dwMajorVersion, osi.dwMinorVersion, LOWORD(osi.dwBuildNumber));
+				break;
 			default:
 				ver = new Version(osi.dwMajorVersion, osi.dwMinorVersion);
 		}
@@ -631,6 +633,7 @@ enum PlatformId: DWORD
 	WIN32s = VER_PLATFORM_WIN32s,
 	WIN32_WINDOWS = VER_PLATFORM_WIN32_WINDOWS,
 	WIN32_NT = VER_PLATFORM_WIN32_NT,
+	WIN64_WINDOWS = VER_PLATFORM_X64_WINDOWS,
 }
 
 
@@ -655,6 +658,9 @@ final class OperatingSystem // docmain
 			// DMD 0.92 says error: cannot implicitly convert uint to PlatformId
 			switch(cast(DWORD)platId)
 			{
+				case PlatformId.WIN64_WINDOWS:
+					result = "Microsoft Windows 7 ";
+				break;
 				case PlatformId.WIN32_NT:
 					result = "Microsoft Windows NT ";
 					break;
@@ -670,6 +676,7 @@ final class OperatingSystem // docmain
 				case PlatformId.WIN_CE:
 					result = "Microsoft Windows CE ";
 					break;
+					
 				
 				default:
 					throw new DflException("Unknown platform ID");

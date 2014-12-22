@@ -22,7 +22,7 @@
 module dfl.internal.utf;
 
 private import dfl.internal.dlib, dfl.internal.clib;
-
+ 
 private import dfl.internal.winapi;
 
 
@@ -204,11 +204,11 @@ Dstring unicodeToAnsi(Dwstringz unicode, size_t ulen)
 	char[] result;
 	int len;
 	
-	len = WideCharToMultiByte(0, 0, unicode, ulen, null, 0, null, null);
+	len = WideCharToMultiByte(0, 0, cast(const(wchar)*)unicode, cast(int)ulen, cast(char*)null, 0, cast(const(char)*)null, cast(int*)null);// null, 0, null, null);
 	assert(len > 0);
-	
+	//cast(uint)
 	result = new char[len];
-	len = WideCharToMultiByte(0, 0, unicode, ulen, result.ptr, len, null, null);
+	len = WideCharToMultiByte(0, 0, cast(const(wchar)*)unicode, cast(int)ulen, result.ptr, len, cast(const(char)*)null,  cast(int*)null);
 	assert(len == result.length);
 	//return result[0 .. len - 1];
 	return cast(Dstring)result[0 .. len - 1]; // Needed in D2.
@@ -222,7 +222,7 @@ Dwstring ansiToUnicode(Dstringz ansi, size_t len)
 	len++;
 	ws = new wchar[len];
 	
-	len = MultiByteToWideChar(0, 0, ansi, len, ws.ptr, len);
+	len = MultiByteToWideChar(0, 0,  cast(const(char)*)ansi, cast(int)len, ws.ptr, cast(int)len);
 	//assert(len == ws.length);
 	ws = ws[0 .. len - 1]; // Exclude null char at end.
 	
@@ -531,7 +531,7 @@ HWND createWindowEx(DWORD dwExStyle, Dstring className, Dstring windowName, DWOR
 			x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 	}
 	else
-	{
+	{	//MessageBoxA(null, "A", "A", 0);
 		return CreateWindowExA(dwExStyle, unsafeAnsiz(className), unsafeAnsiz(windowName), dwStyle,
 			x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 	}
@@ -587,7 +587,7 @@ Dstring getWindowText(HWND hwnd)
 		len++;
 		buf = (new wchar[len]).ptr;
 		
-		len = proc(hwnd, buf, len);
+		len = proc(hwnd, buf, cast(int)len);
 		return fromUnicode(buf, len);
 	}
 	else
@@ -601,7 +601,7 @@ Dstring getWindowText(HWND hwnd)
 		len++;
 		buf = (new char[len]).ptr;
 		
-		len = GetWindowTextA(hwnd, buf, len);
+		len = GetWindowTextA(hwnd, buf,  cast(int)len);
 		return fromAnsi(buf, len);
 	}
 }
@@ -661,7 +661,7 @@ Dstring getModuleFileName(HMODULE hmod)
 		wchar[] s;
 		DWORD len;
 		s = new wchar[MAX_PATH];
-		len = proc(hmod, s.ptr, s.length);
+		len = proc(hmod, s.ptr,  cast(uint)s.length);
 		return fromUnicode(s.ptr, len);
 	}
 	else
@@ -669,7 +669,7 @@ Dstring getModuleFileName(HMODULE hmod)
 		char[] s;
 		DWORD len;
 		s = new char[MAX_PATH];
-		len = GetModuleFileNameA(hmod, s.ptr, s.length);
+		len = GetModuleFileNameA(hmod, s.ptr, cast(uint)s.length);
 		return fromAnsi(s.ptr, len);
 	}
 }
@@ -747,7 +747,7 @@ Dstring emGetSelText(HWND hwnd, size_t selTextLength)
 Dstring getSelectedText(HWND hwnd)
 {
 	uint v1, v2;
-	uint len;
+	ulong len;
 	
 	if(useUnicode)
 	{
@@ -766,14 +766,14 @@ Dstring getSelectedText(HWND hwnd)
 			return null;
 		assert(v2 > v1);
 		
-		len = proc(hwnd, WM_GETTEXTLENGTH, 0, 0);
+		len = proc(hwnd, WM_GETTEXTLENGTH, cast(WPARAM)0,  cast(LPARAM)0);
 		if(len)
 		{
 			len++;
 			wchar* buf;
-			buf = (new wchar[len]).ptr;
+			buf = (new wchar[cast(uint)len]).ptr;
 			
-			len = proc(hwnd, WM_GETTEXT, len, cast(LPARAM)buf);
+			len = proc(hwnd, WM_GETTEXT, cast(uint)len, cast(LPARAM)buf);
 			if(len)
 			{
 				wchar[] s;
@@ -794,9 +794,9 @@ Dstring getSelectedText(HWND hwnd)
 		{
 			len++;
 			char* buf;
-			buf = (new char[len]).ptr;
+			buf = (new char[cast(uint)len]).ptr;
 			
-			len = SendMessageA(hwnd, WM_GETTEXT, len, cast(LPARAM)buf);
+			len = SendMessageA(hwnd, WM_GETTEXT, cast(uint)len, cast(LPARAM)buf);
 			if(len)
 			{
 				char[] s;
@@ -1014,7 +1014,7 @@ Dstring getClipboardFormatName(UINT format)
 		wchar[] buf;
 		int len;
 		buf = new wchar[64];
-		len = proc(format, buf.ptr, buf.length);
+		len = proc(format, buf.ptr, cast(int)buf.length);
 		if(!len)
 			return null;
 		return fromUnicode(buf.ptr, len);
@@ -1024,7 +1024,7 @@ Dstring getClipboardFormatName(UINT format)
 		char[] buf;
 		int len;
 		buf = new char[64];
-		len = GetClipboardFormatNameA(format, buf.ptr, buf.length);
+		len = GetClipboardFormatNameA(format, buf.ptr, cast(int)buf.length);
 		if(!len)
 			return null;
 		return fromAnsi(buf.ptr, len);
@@ -1075,7 +1075,7 @@ int drawTextEx(HDC hdc, Dstring text, LPRECT lprc, UINT dwDTFormat, LPDRAWTEXTPA
 			str = cast(Dwstring)tempStr[0 .. 1]; // Needed in D2.
 		}
 		//return proc(hdc, str.ptr, str.length, lprc, dwDTFormat, lpDTParams);
-		return proc(hdc, cast(wchar*)str.ptr, str.length, lprc, dwDTFormat, lpDTParams); // Needed in D2.
+		return proc(hdc, cast(wchar*)str.ptr, cast(int)str.length, lprc, dwDTFormat, lpDTParams); // Needed in D2.
 	}
 	else
 	{
@@ -1095,7 +1095,7 @@ int drawTextEx(HDC hdc, Dstring text, LPRECT lprc, UINT dwDTFormat, LPDRAWTEXTPA
 			str = cast(Dstring)tempStr[0 .. 1]; // Needed in D2.
 		}
 		//return DrawTextExA(hdc, str.ptr, str.length, lprc, dwDTFormat, lpDTParams);
-		return DrawTextExA(hdc, cast(char*)str.ptr, str.length, lprc, dwDTFormat, lpDTParams); // Needed in D2.
+		return DrawTextExA(hdc, cast(char*)str.ptr, cast(int)str.length, lprc, dwDTFormat, lpDTParams); // Needed in D2.
 	}
 }
 
@@ -1233,7 +1233,7 @@ Dstring getFullPathName(Dstring fileName)
 			wchar[] wbuf = _wbuf;
 			if(len > _wbuf.sizeof)
 				wbuf = new wchar[len];
-			len = proc(fnw, wbuf.length, wbuf.ptr, null);
+			len = proc(fnw, cast(uint)wbuf.length, wbuf.ptr, cast(wchar**)null);
 			assert(len < wbuf.length);
 			return fromUnicode(wbuf.ptr, len);
 		}
@@ -1247,7 +1247,7 @@ Dstring getFullPathName(Dstring fileName)
 			char[] abuf = _abuf;
 			if(len > _abuf.sizeof)
 				abuf = new char[len];
-			len = GetFullPathNameA(fna, abuf.length, abuf.ptr, null);
+			len = GetFullPathNameA(fna, cast(uint)abuf.length, abuf.ptr, cast(char**)null);
 			assert(len < abuf.length);
 			return fromAnsi(abuf.ptr, len);
 		}
@@ -1319,7 +1319,7 @@ Dstring getSystemDirectory()
 		wchar[] buf;
 		UINT len;
 		buf = new wchar[MAX_PATH];
-		len = proc(buf.ptr, buf.length);
+		len = proc(buf.ptr, cast(uint)buf.length);
 		if(!len)
 			return null;
 		return fromUnicode(buf.ptr, len);
@@ -1329,7 +1329,7 @@ Dstring getSystemDirectory()
 		char[] buf;
 		UINT len;
 		buf = new char[MAX_PATH];
-		len = GetSystemDirectoryA(buf.ptr, buf.length);
+		len = GetSystemDirectoryA(buf.ptr, cast(uint)buf.length);
 		if(!len)
 			return null;
 		return fromAnsi(buf.ptr, len);
@@ -1584,7 +1584,7 @@ deprecated BOOL getTextExtentPoint32(HDC hdc, Dstring text, LPSIZE lpSize)
 		
 		Dwstring str;
 		str = toUnicode(text);
-		return proc(hdc, str.ptr, str.length, lpSize);
+		return proc(hdc, str.ptr, cast(uint)str.length, lpSize);
 	}
 	else
 	{
@@ -1592,7 +1592,7 @@ deprecated BOOL getTextExtentPoint32(HDC hdc, Dstring text, LPSIZE lpSize)
 		// to keep the measurements accurate with DrawTextA.
 		Dstring str;
 		str = unsafeAnsi(text);
-		return GetTextExtentPoint32A(hdc, str.ptr, str.length, lpSize);
+		return GetTextExtentPoint32A(hdc, str.ptr, cast(uint)str.length, lpSize);
 	}
 }
 
@@ -1627,7 +1627,7 @@ Dstring dragQueryFile(HDROP hDrop, UINT iFile)
 		if(!len)
 			return null;
 		str = new wchar[len + 1];
-		proc(hDrop, iFile, str.ptr, str.length);
+		proc(hDrop, iFile, str.ptr, cast(uint)str.length);
 		return fromUnicode(str.ptr, len);
 	}
 	else
@@ -1638,7 +1638,7 @@ Dstring dragQueryFile(HDROP hDrop, UINT iFile)
 		if(!len)
 			return null;
 		str = new char[len + 1];
-		DragQueryFileA(hDrop, iFile, str.ptr, str.length);
+		DragQueryFileA(hDrop, iFile, str.ptr, cast(uint)str.length);
 		return fromAnsi(str.ptr, len);
 	}
 }

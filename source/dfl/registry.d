@@ -167,7 +167,7 @@ class RegistryValueSz: RegistryValue
 	/+ package +/ protected override LONG save(HKEY hkey, Dstring name) // package
 	{
 		auto valuez = unsafeStringz(value);
-		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_SZ, cast(BYTE*)valuez, value.length + 1);
+		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_SZ, cast(BYTE*)valuez, cast(uint)(value.length + 1));
 	}
 }
 
@@ -261,7 +261,7 @@ class RegistryValueMultiSz: RegistryValue
 	/+ package +/ protected override LONG save(HKEY hkey, Dstring name) // package
 	{
 		char[] multi;
-		uint i;
+		size_t i;
 		
 		i = value.length + 1; // Each NUL and the extra terminating NUL.
 		foreach(Dstring s; value)
@@ -282,7 +282,7 @@ class RegistryValueMultiSz: RegistryValue
 		multi[i++] = 0;
 		assert(i == multi.length);
 		
-		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_MULTI_SZ, cast(BYTE*)multi, multi.length);
+		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_MULTI_SZ, cast(BYTE*)multi, cast(uint)multi.length);
 	}
 }
 
@@ -321,7 +321,7 @@ class RegistryValueExpandSz: RegistryValue
 	/+ package +/ protected override LONG save(HKEY hkey, Dstring name) // package
 	{
 		auto valuez = unsafeStringz(value);
-		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_EXPAND_SZ, cast(BYTE*)valuez, value.length + 1);
+		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_EXPAND_SZ, cast(BYTE*)valuez, cast(uint)(value.length + 1));
 	}
 }
 
@@ -340,7 +340,7 @@ body
 {
 	char[] result;
 	Dstring stmp;
-	uint ntmp;
+	size_t ntmp;
 	
 	stmp = uintToHexString(dw);
 	assert(stmp.length <= 8);
@@ -477,7 +477,7 @@ class RegistryValueBinary: RegistryValue
 	
 	/+ package +/ protected override LONG save(HKEY hkey, Dstring name) // package
 	{
-		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_BINARY, cast(BYTE*)value, value.length);
+		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_BINARY, cast(BYTE*)value, cast(uint)value.length);
 	}
 }
 
@@ -515,7 +515,7 @@ class RegistryValueLink: RegistryValue
 	
 	/+ package +/ protected override LONG save(HKEY hkey, Dstring name) // package
 	{
-		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_LINK, cast(BYTE*)value, value.length);
+		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_LINK, cast(BYTE*)value, cast(uint)value.length);
 	}
 }
 
@@ -553,7 +553,7 @@ class RegistryValueResourceList: RegistryValue
 	
 	/+ package +/ protected override LONG save(HKEY hkey, Dstring name) // package
 	{
-		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_RESOURCE_LIST, cast(BYTE*)value, value.length);
+		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_RESOURCE_LIST, cast(BYTE*)value, cast(uint)value.length);
 	}
 }
 
@@ -591,7 +591,7 @@ class RegistryValueNone: RegistryValue
 	
 	/+ package +/ protected override LONG save(HKEY hkey, Dstring name) // package
 	{
-		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_NONE, cast(BYTE*)value, value.length);
+		return RegSetValueExA(hkey, unsafeStringz(name), 0, REG_NONE, cast(BYTE*)value, cast(uint)value.length);
 	}
 }
 

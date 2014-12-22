@@ -12,6 +12,14 @@ version(DFL_NO_BUD_DEF)
 	version = DFL_NO_BUILD_DEF;
 
 
+    //$(TOC pragmas, Pragmas)
+       // $(TOC_SUB pragmas,pragma_build, build)
+      //  $(TOC_SUB pragmas,pragma_build_def, build def)
+      //  $(TOC_SUB pragmas,pragma_export_version, export version)
+      //  $(TOC_SUB pragmas,pragma_ignore, ignore)
+      //  $(TOC_SUB pragmas,pragma_include, include)
+     //   $(TOC_SUB pragmas,pragma_link, link)
+        
 version(build)
 {
 	version(WINE)
@@ -52,7 +60,10 @@ version(build)
 		}
 	}
 }
-
+ // pragma(link, "SUBSYSTEM WINDOWS,4.0");
+ 
+ 
+ 
 
 public import dfl.base, dfl.menu, dfl.control, dfl.usercontrol,
 	dfl.form, dfl.drawing, dfl.panel, dfl.event,
@@ -63,5 +74,6 @@ public import dfl.base, dfl.menu, dfl.control, dfl.usercontrol,
 	dfl.clipboard, dfl.commondialog, dfl.richtextbox, dfl.tooltip,
 	dfl.combobox, dfl.treeview, dfl.picturebox, dfl.tabcontrol,
 	dfl.listview, dfl.statusbar, dfl.progressbar, dfl.resources,
-	dfl.imagelist, dfl.toolbar;
+	dfl.imagelist, dfl.toolbar,
+	dfl.internal.utf,dfl.internal.com,dfl.internal.winapi,dfl.internal.wincom;
 

@@ -18,12 +18,13 @@ For example:
     to get the debug version( -release to get another)
 
 	build some *.d to lib or exe 			 : dco ↓
+	build some *.d to lib or exe for 64 bit	 : dco -m64 ↓
 	build  one app.d in many *.d    		 : dco app or  dco app.d
 	build for libs 	such as dfl,dgui         : dco  -lib
 	build for app.d use dfl2				 : dco  -gui
 	build app.d use dfl2 for console		 : dco  -con
-	build lib and copy to libs				 : dco -lib -c
-	build by custom	and copy to libs         : dco -arg -addlib -lib -c
+	build lib and copy to libs				 : dco -lib -copy
+	build by custom	and copy to libs         : dco -arg -addlib -lib -copy
 
     if your exe's file works on console,you should add '-con' or '-console'. 
     
@@ -36,7 +37,7 @@ Authors:   FrankLIKE
 Source: $(dco.d)
  
 Created Time:2014-10-27
-Modify Time:2014-10-31~2014-11-13
+Modify Time:2014-10-31~2014-12-22
 */
 module dco;
 /// dco 
@@ -50,11 +51,11 @@ import	std.exception;
 import  std.json;
 import std.exception;
 
-string strVersion ="v0.0.6";
-string	strAddArgs,strAddArgsdfl = " -de -w -property -X ";
+string strVersion ="v0.0.7";
+string	strAddArgs,strAddArgsdfl = " -de -w -property ";
 string	strDebug,strDebugDefault=" -debug";
-string	strTargetLflags,strConsole=" -L/su:console:4 ",strWindows = " -L/SUBSYSTEM:WINDOWS ";
-string	strTargetLib,SpecialLib = "dfl",strWinLibs=" ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib "; 
+string	strTargetLflags,strConsole=" -L/su:console:4 ",strWindows = " -L-Subsystem:Windows ",strWindows64 = " -L-Subsystem:Windows -L-ENTRY:mainCRTStartup ";
+string	strTargetLib,SpecialLib = "dfl",strWinLibs=" user32.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib "; 
 string	strDFile;
 string	strAddLib;
 string	strOtherArgs;
@@ -62,6 +63,7 @@ string	strImportDefault = " -I$(DMDInstallDir)windows/import ";
 string	strTargetPath,strTargetFileName,strTargetTypeSwitch,targetTypeDefault = "lib";
 string	strDCEnv,strDCEnvFile;
 SysTime sourceLastUpdateTime,targetTime;
+string	compileType; 
 
 bool	bUseSpecialLib =false,bDebug =true,bBuildSpecialLib =false;
 bool	bCopy =false ,bDisplayBuildStr=false,bDisplayCopyInfo =true;
@@ -73,8 +75,9 @@ string configFile ="dco.ini";
 string[string] configKeyValue;
 
 //ini args
-string strPackageName,strArgs,strTargetName,strTargetType ="exe",strDC,strDCStandardEnvBin ="dmd2\\windows\\bin",strLibs ,strImport,strLflags;
+string strPackageName,strArgs,strTargetName,strTargetType ="exe",strDC,strDCStandardEnvBin ="dmd2\\windows\\bin",strLibs ,strImport,strLflags,strDflags;
  
+
 void main(string[] args)
 {
 	if(!findDCEnv()) return;
@@ -111,7 +114,7 @@ bool findDCEnv()
 	string strDCExe = "\\" ~ strDC.stripRight() ~ ".exe";
 	string strFireWall = " Maybe FirWall stop checking the " ~ strDCExe ~ ",please stop it.";
 	
-	int len = strDCStandardEnvBin.length;
+	auto len = strDCStandardEnvBin.length;
 
 	auto path = environment["PATH"];
 	string[] strDCs = path.split(";");
@@ -122,13 +125,11 @@ bool findDCEnv()
 		{
 			if(exists(s ~ strDCExe))
 			{ 
+				strDCEnv = s;
+				strDCEnvFile =  s ~ strDCExe;
+					
 				strTempFile = s ~ "\\dco.exe";
-				if(exists(strTempFile))
-				{
-					strDCEnv = s;
-					strDCEnvFile =  s ~ strDCExe;
-				   break;
-			    }
+				if(exists(strTempFile))break;
 			}
 		}
 	}
@@ -179,7 +180,9 @@ bool readConfig(string configFile)
 		strDCStandardEnvBin = configKeyValue.get("DCStandardEnvBin","dmd2\\windows\\bin"); 
 		SpecialLib = configKeyValue.get("SpecialLib","dfl");  
 		strImport = configKeyValue.get("importPath","");
-		strLflags = configKeyValue.get("lflags","/su:console:4"); 
+		strLflags = configKeyValue.get("lflags","-L/su:console:4"); 
+		strDflags = configKeyValue.get("dfalgs",""); 
+		strLibs = configKeyValue.get("libs",""); 
 		return true;
   }
   catch(Exception e) 
@@ -192,7 +195,7 @@ bool readConfig(string configFile)
 bool checkArgs(string[] args)
 {
 	string c;
-	int p;
+	size_t p;
 	bool bDFile =false;
 	foreach(int i,arg;args)
 	{
@@ -317,7 +320,7 @@ bool checkIsUpToDate(string strPathFile,SysTime targettime)
 void buildExe(string[] args)
 {
 	string c;
-	int p;
+	size_t p;
 	foreach(int i,arg;args)
 	{
 		if(i ==0) continue;
@@ -334,6 +337,10 @@ void buildExe(string[] args)
 				break;
 			case "gui":
 				strTargetLflags = strWindows;
+				bUseSpecialLib = true;
+    			strAddArgs = strAddArgsdfl;
+				break;
+			case "use":
 				bUseSpecialLib = true;
     			strAddArgs = strAddArgsdfl;
 				break;
@@ -373,7 +380,7 @@ void buildExe(string[] args)
 				 bBuildSpecialLib = true;
 				strTargetTypeSwitch = " -" ~ targetTypeDefault;
 				break;
-			case "c","copy":
+			case "copy":
 				bCopy = true;
 				break;
 			case "force":
@@ -383,6 +390,10 @@ void buildExe(string[] args)
 				
 				break;
     		default:
+    		    if(c == "m64" || c == "m32mscoff")
+    		    { 
+					compileType =c[1..$];
+				}
 				strOtherArgs ~= " ";
 				strOtherArgs ~= arg;
 				break;
@@ -390,11 +401,11 @@ void buildExe(string[] args)
     	}
 	}
 
-   strTargetLib = bDebug ? SpecialLib ~ "_debug.lib" : SpecialLib ~ ".lib";
+   strTargetLib = bDebug ? SpecialLib ~ "_debug" ~ compileType ~ ".lib" : SpecialLib ~ compileType ~ ".lib" ;
  
    if(bBuildSpecialLib)
    {
-	   strOtherArgs = " -of" ~ strTargetLib;
+	   strOtherArgs ~= " -of" ~ strTargetLib;
 	   strAddLib = strLibs;
 	  strTargetFileName = getcwd() ~ "\\" ~ strTargetLib;
    }
@@ -405,13 +416,30 @@ void buildExe(string[] args)
  
 	if(bUseSpecialLib)
 	{
-			if(SpecialLib == "dfl")
-	{
-		strLibs =strWinLibs;
+		if(SpecialLib == "dfl")
+		{
+			strLibs =strWinLibs;
+		}
+		strAddLib = strLibs ~" " ~ strTargetLib ;
 	}
-		strAddLib = strTargetLib ~" " ~ strLibs;
+	else
+	{
+		strAddLib = strLibs;
 	}
   
+    if(strDflags !="")
+    {
+    	strOtherArgs ~= " ";
+    	strOtherArgs ~= strDflags;
+    }
+    if(strTargetLflags == "" && strLflags !="")
+	{
+		strTargetLflags = strLflags;
+	}
+	if(compileType == "64" && bUseSpecialLib)
+	{
+		strTargetLflags = strWindows64;
+	}
 	buildExe();
 }
 
@@ -426,7 +454,7 @@ void buildExe()
 	string strCommon = strOtherArgs ~" " ~ strImportDefault ~ strImport ~ " " ~ strAddLib ~ strTargetLflags ~ strDFile ~ strDebug;
     string buildstr = strDC ~ strAddArgsdfl ~ strCommon ~ "\r\n";
 	buildstr = bUseSpecialLib ? buildstr : strDC ~ strCommon;
-	if(bDisplayBuildStr)
+	//if(bDisplayBuildStr)
 	{
 		writeln(buildstr);
 	}
@@ -469,7 +497,7 @@ void copyFile()
 	}
 	else
 	{ 
-		string strDCLibPath = strDCEnv[0..(strDCEnv.length - "bin".length)].idup ~ "lib"; 
+		string strDCLibPath = strDCEnv[0..(strDCEnv.length - "bin".length)].idup ~ "lib" ~ compileType; 
 		//copy(strDCEnv,strDCLibPath);
 		strcopy = "copy " ~ strTargetFileName ~ " " ~ strDCLibPath;
 	}
@@ -487,16 +515,17 @@ void copyFile()
 
 bool findFiles()
 { 
-	int i=0;
+	int i = 0;
 	bool bPackage = false; 
 	auto packages = dirEntries(".","{package.d,all.d}",SpanMode.depth);
 	foreach(p; packages){i++;}
 	bPackage = (i > 0);
+	 
 	auto dFiles = dirEntries(".","*.{d,di}",SpanMode.depth);
 	int icount =0;
     SysTime fileTime;
     DirEntry rootDE ;
-  
+
 	foreach(d; dFiles)
 	{	 
 	    if(!bAssignTarget)
@@ -507,11 +536,13 @@ bool findFiles()
 				strTargetName ~= "." ~ strTargetType; 
 			}
 		}
-		if(icount ==0 )
+		if(icount == 0 )
 		{
 			ReadDFile(d,bPackage);
 		}
 		
+		if(d.toLower().indexOf("ignorefiles") != -1) continue;
+ 
 		strDFile ~= " ";
 		strDFile ~= d.name[2 ..$].idup;
 		 
@@ -568,33 +599,38 @@ void ShowUsage()
 dco build tool " ~ strVersion ~ "
 written by FrankLIKE.
 Usage:
-	dco [<switches...>] <files...>
+  dco [<switches...>] <files...>
 		  
-	for example: dco  
-	         or: dco app.d 
+for example:     dco  
+	     or: dco app.d 
 		 
-build for dfl2:	dco  
-			or: dco -gui
-			or:	dco *.d -gui
+build for dfl2:	 dco  
+	     or: dco -gui
+	     or: dco *.d -gui
 build for other: dco -lib
-		     or: dco *.d -lib
-			 or: dco *.d -release
-	         or: dco *.d -arg -addlib
+	     or: dco *.d -lib
+	     or: dco *.d -release
+	     or: dco *.d -arg -addlib
 
 Switches:
     -h	       Print help(usage: -h,or -help).
-    -c	       Copy new exe or lib to 'windows/bin' or 'lib' Folder
-		(-copy also is ok). 
+    -copy      Copy new exe or lib to 'windows/bin' or 'lib' Folder. 
     -release   Build files's Release version(Default version is 'debug').
-    -gui       Make a Windows GUI exe without a console(For DFL).
+    -gui       Make a Windows GUI exe without a console(For DFL or Dgui).
+    -use       Use the Sepetail Lib to create exe with console.
     -win       Make a Windows GUI exe without a console
 		(For any other: the same to -winexe,-windows).
     -lib       Build lib files.
-    -ini	   Create the ini file for config. 
+    -ini       Create the ini file for config. 
     -all       Build files by args,libs(Default no dfl_debug.lib) in Console.
     -arg       Build files by args(-de -w -property -X).
-    -addlib    Build files by add libs(ole32.lib oleAut32.lib gdi32.lib 
+    -addlib    Build files by add libs(user32.lib ole32.lib oleAut32.lib gdi32.lib 
 		Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib).
+    -m64       Generate 64bit lib or exe.
+    -m32mscoff Generate x86 ms coff lib or exe,and please set some info in sc.ini. 
+		
+IgnoreFiles:
+	      If you have some files to ignore,please put them in Folder 'ignoreFiles'.
     ");
 } 
 
@@ -608,13 +644,20 @@ void ReadDFile(string dFile,bool bPackage)
     {
         if (!line.init && line.indexOf("import") != -1)
         { 
-          bUseSpecialLib = !bPackage;
+          
           bBuildSpecialLib = bPackage;
-          if(bUseSpecialLib) strTargetLflags = strWindows;
+         
           
         	if(line.indexOf("dfl") != -1)
         	{
         		SpecialLib = "dfl";
+        		
+        		bUseSpecialLib = !bPackage;
+        		
+        		 if(bUseSpecialLib) 
+					strTargetLflags = strWindows;
+        		 else
+					strTargetLflags = strConsole;
 				break;
 			}
 			else if(line.indexOf("dgui") != -1)
@@ -622,6 +665,13 @@ void ReadDFile(string dFile,bool bPackage)
 				strArgs = strAddArgsdfl = " -g -de -w -property -X ";
 				SpecialLib = "dgui";
 				break;
+			}
+			else
+			{
+				if(bUseSpecialLib) 
+					strTargetLflags = strWindows;
+        		 else
+					strTargetLflags = strConsole;
 			}
         }
         icount++;
@@ -642,8 +692,10 @@ void initNewConfigFile()
 	ini.writeln(";importPath=-I$(DMDInstallDir)windows/import");
 	ini.writeln("importPath=");
 	ini.writeln(";lflags=-L/su:console:4");
-	ini.writeln(";lflags=-L/SUBSYSTEM:WINDOWS");
+	ini.writeln(";lflags=-L-Subsystem:Windows");
 	ini.writeln("lflags=");
+	ini.writeln(";dflags=");
+	ini.writeln(";libs=");
 	ini.close();
  
 	auto pid = spawnProcess(["notepad.exe","dco.ini"]);

@@ -243,7 +243,7 @@ class ListViewItem: DObject
 		{
 			LV_ITEMA li;
 			li.stateMask = LVIS_STATEIMAGEMASK;
-			li.state = cast(LPARAM)(bchecked ? 2 : 1) << 12;
+			li.state = cast(uint)(bchecked ? 2 : 1) << 12;
 			lview.prevwproc(LVM_SETITEMSTATE, cast(WPARAM)thisindex, cast(LPARAM)&li);
 		}
 	}
@@ -719,7 +719,7 @@ class ListView: ControlSuperClass // docmain
 			switch(lv.sorting)
 			{
 				case SortOrder.NONE: // Add to end.
-					ii = _items.length;
+					ii = cast(int)_items.length;
 					break;
 				
 				case SortOrder.ASCENDING: // Insertion sort.
@@ -807,7 +807,7 @@ class ListView: ControlSuperClass // docmain
 			int ii;
 			foreach(int i, ListViewItem item; _items)
 			{
-				ii = lv._ins(i, item);
+				ii = cast(int)lv._ins(i, item);
 				//assert(-1 != ii);
 				assert(i == ii);
 				
@@ -842,7 +842,7 @@ class ListView: ControlSuperClass // docmain
 			int i;
 			if(created)
 			{
-				i = lv._ins(idx, val);
+				i = cast(int)lv._ins(cast(int)idx, val);
 				assert(-1 != i);
 			}
 		}
@@ -918,7 +918,7 @@ class ListView: ControlSuperClass // docmain
 			int ii;
 			foreach(int i, ColumnHeader header; _headers)
 			{
-				ii = lv._ins(i, header);
+				ii = cast(int)lv._ins(i, header);
 				assert(-1 != ii);
 				//assert(i == ii);
 			}
@@ -938,7 +938,7 @@ class ListView: ControlSuperClass // docmain
 			int i;
 			if(created)
 			{
-				i = lv._ins(idx, val);
+				i = cast(int)lv._ins(cast(int)idx, val);
 				assert(-1 != i);
 			}
 		}
@@ -1203,9 +1203,9 @@ class ListView: ControlSuperClass // docmain
 			int result = 0;
 			foreach(ref size_t i, ref ListViewItem lvitem; lview.items)
 			{
-				if(lvitem._getcheckstate(i))
+				if(lvitem._getcheckstate(cast(int)i))
 				{
-					int dgidx = i; // Prevent ref.
+					int dgidx = cast(int)i; // Prevent ref.
 					result = dg(dgidx);
 					if(result)
 						break;
@@ -1775,7 +1775,7 @@ class ListView: ControlSuperClass // docmain
 					SendMessageA(handle, LVM_DELETEALLITEMS, 0, 0); // Note: this sends LVN_DELETEALLITEMS.
 					foreach(idx, lvi; sitems)
 					{
-						_ins(idx, lvi);
+						_ins(cast(int)idx, lvi);
 					}
 					endUpdate();
 				}

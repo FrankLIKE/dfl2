@@ -207,7 +207,7 @@ else
 					}
 					else
 					{
-						imageListRemove(handle, idx);
+						imageListRemove(handle, cast(int)idx);
 					}
 				}
 			}
@@ -403,7 +403,7 @@ else
 			}
 			
 			// Note: cGrow is not a limit, but how many images to preallocate each grow.
-			_hil = imageListCreate(_w, _h, flags, _cimages._images.length, 4 + _cimages._images.length / 4);
+			_hil = imageListCreate(_w, _h, flags, cast(int)_cimages._images.length,cast(int) (4 + _cimages._images.length / 4));
 			if(!_hil)
 				throw new DflException("Unable to create image list");
 			

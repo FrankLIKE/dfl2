@@ -7,10 +7,10 @@ private extern (Windows)
 {
 	struct RGNDATAHEADER
 	{
-		DWORD dwSize;
-		DWORD iType;
-		DWORD nCount;
-		DWORD nRgnSize;
+		DWORD64 dwSize;
+		DWORD64 iType;
+		DWORD64 nCount;
+		DWORD64 nRgnSize;//DWORD64
 		RECT rcBound;
 	}
 	
@@ -34,7 +34,7 @@ private extern (Windows)
 	enum {BI_RGB = 0}
 	enum {DIB_RGB_COLORS = 0}
 	
-	HRGN ExtCreateRegion(void*, DWORD, RGNDATA*);
+	HRGN ExtCreateRegion(void*, DWORD64, RGNDATA*);
 	int GetDIBits(HDC, HBITMAP, UINT, UINT, PVOID, LPBITMAPINFO, UINT);
 }
 
@@ -44,9 +44,9 @@ struct RegionRects
 {
 private:
 	RGNDATA* _rgn = null;
-	size_t _capacity = 0;
-	size_t _width = 0;
-	size_t _height = 0;
+	INT _capacity = 0;
+	INT _width = 0;
+	INT _height = 0;
 public:
 	
 	
@@ -95,7 +95,7 @@ public:
 			_rgn = cast(RGNDATA*) GC.realloc(cast(void*)_rgn,
 				RGNDATAHEADER.sizeof + RECT.sizeof * _capacity);
 		}
-		(cast(RECT*)_rgn.Buffer.ptr)[_rgn.rdh.nCount++] = rc;
+		(cast(RECT*)_rgn.Buffer.ptr)[cast(uint)(_rgn.rdh.nCount++)] = rc;
 	}
 	
 	
@@ -122,7 +122,7 @@ public:
 		{
 			dwSize = RGNDATAHEADER.sizeof;
 			iType  = RDH_RECTANGLES;
-			nRgnSize = RGNDATAHEADER.sizeof + RECT.sizeof*nCount;
+			nRgnSize = RGNDATAHEADER.sizeof +  RECT.sizeof*nCount;
 			rcBound = RECT(0,0,_width,_height);
 		}
 		if (auto hRgn = ExtCreateRegion(null, _rgn.rdh.nRgnSize, _rgn))

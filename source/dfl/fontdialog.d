@@ -448,6 +448,6 @@ private extern(Windows) UINT fondHookProc(HWND hwnd, UINT msg, WPARAM wparam, LP
 		Application.onThreadException(e);
 	}
 	
-	return result;
+	return cast(uint)result;
 }
 

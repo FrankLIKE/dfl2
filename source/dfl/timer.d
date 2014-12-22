@@ -33,7 +33,7 @@ class Timer // docmain
 	
 	
 	///
-	final @property void interval(size_t timeout) // setter
+	final @property void interval(uint timeout) // setter
 	{
 		if(!timeout)
 			throw new DflException("Invalid timer interval");
@@ -143,8 +143,8 @@ class Timer // docmain
 	
 	
 	private:
-	DWORD _timeout = 100;
-	UINT timerId = 0;
+	uint _timeout = 100;
+	uint timerId = 0;
 	void delegate(Timer) _dg;
 	
 	
@@ -158,10 +158,10 @@ class Timer // docmain
 
 private:
 
-Timer[UINT] allTimers;
+Timer[size_t] allTimers;
 
 
-extern(Windows) void timerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) nothrow
+extern(Windows) void timerProc(HWND hwnd, UINT uMsg, size_t idEvent, DWORD dwTime) nothrow
 {
 	try
 	{

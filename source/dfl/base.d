@@ -27,7 +27,7 @@ alias IWindow IWin32Window; // deprecated
 class DflException: Exception // docmain
 {
 	///
-	this(Dstring msg, string file = __FILE__, int line = __LINE__)
+	this(Dstring msg, string file = __FILE__, size_t line = __LINE__)
 	{
 		super(msg, file, line);
 	}
@@ -412,7 +412,7 @@ abstract class WaitHandle
 			hs[i] = wh.handle;
 		}
 		
-		result = WaitForMultipleObjects(handles.length, hs, waitall, msTimeout);
+		result = WaitForMultipleObjects(cast(DWORD)handles.length, hs, waitall, msTimeout);
 		if(WAIT_FAILED == result)
 		{
 			fail:

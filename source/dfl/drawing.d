@@ -2339,9 +2339,9 @@ class Graphics // docmain
 		
 		if(vSplit)
 		{
-			x = movableArea.x + (movableArea.width / 2 - MWIDTH / 2);
+			x = cast(int)(movableArea.x + (movableArea.width / 2 - MWIDTH / 2));
 			//y = movableArea.height / 2 - ((MWIDTH * count) + (MSPACE * (count - 1))) / 2;
-			y = movableArea.y + (movableArea.height / 2 - ((MWIDTH * count) + (MSPACE * count)) / 2);
+			y = cast(int)(movableArea.y + (movableArea.height / 2 - ((MWIDTH * count) + (MSPACE * count)) / 2));
 			
 			for(iw = 0; iw != count; iw++)
 			{
@@ -2352,7 +2352,7 @@ class Graphics // docmain
 		else // hSplit
 		{
 			//x = movableArea.width / 2 - ((MHEIGHT * count) + (MSPACE * (count - 1))) / 2;
-			x = movableArea.x + (movableArea.width / 2 - ((MHEIGHT * count) + (MSPACE * count)) / 2);
+			x = cast(int)(movableArea.x + (movableArea.width / 2 - ((MHEIGHT * count) + (MSPACE * count)) / 2));
 			y = movableArea.y + (movableArea.height / 2 - MHEIGHT / 2);
 			
 			for(iw = 0; iw != count; iw++)
@@ -2757,7 +2757,7 @@ class Graphics // docmain
 		static assert(Point.sizeof == POINT.sizeof);
 		cpts = cast(POINT*)cast(Point*)points;
 		
-		PolyBezier(hdc, cpts, points.length);
+		PolyBezier(hdc, cpts, cast(uint)points.length);
 		
 		// Reset stuff.
 		SelectObject(hdc, prevPen);
@@ -2813,7 +2813,7 @@ class Graphics // docmain
 		static assert(Point.sizeof == POINT.sizeof);
 		cpts = cast(POINT*)cast(Point*)points;
 		
-		Polygon(hdc, cpts, points.length);
+		Polygon(hdc, cpts, cast(int)points.length);
 		
 		// Reset stuff.
 		SelectObject(hdc, prevPen);

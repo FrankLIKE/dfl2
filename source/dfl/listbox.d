@@ -128,7 +128,7 @@ class ListBox: ListControl // docmain
 			
 			if(lbox.isMultSel())
 			{
-				return lbox.prevwproc(LB_GETSELCOUNT, 0, 0);
+				return cast(int)lbox.prevwproc(LB_GETSELCOUNT, 0, 0);
 			}
 			else
 			{
@@ -224,7 +224,7 @@ class ListBox: ListControl // docmain
 			
 			if(lbox.isMultSel())
 			{
-				return lbox.prevwproc(LB_GETSELCOUNT, 0, 0);
+				return cast(int)lbox.prevwproc(LB_GETSELCOUNT, 0, 0);
 			}
 			else
 			{
@@ -786,7 +786,7 @@ class ListBox: ListControl // docmain
 	final @property int topIndex() // getter
 	{
 		if(isHandleCreated)
-			return prevwproc(LB_GETTOPINDEX, 0, 0);
+			return cast(int)prevwproc(LB_GETTOPINDEX, 0, 0);
 		return 0;
 	}
 	
@@ -847,9 +847,9 @@ class ListBox: ListControl // docmain
 		if(created)
 		{
 			if(dfl.internal.utf.useUnicode)
-				result = prevwproc(LB_FINDSTRING, startIndex, cast(LPARAM)dfl.internal.utf.toUnicodez(str));
+				result = cast(int)prevwproc(LB_FINDSTRING, startIndex, cast(LPARAM)dfl.internal.utf.toUnicodez(str));
 			else
-				result = prevwproc(LB_FINDSTRING, startIndex, cast(LPARAM)dfl.internal.utf.unsafeAnsiz(str));
+				result = cast(int)prevwproc(LB_FINDSTRING, startIndex, cast(LPARAM)dfl.internal.utf.unsafeAnsiz(str));
 			if(result == LB_ERR) // Redundant.
 				result = NO_MATCHES;
 		}
@@ -874,9 +874,9 @@ class ListBox: ListControl // docmain
 		if(created)
 		{
 			if(dfl.internal.utf.useUnicode)
-				result = prevwproc(LB_FINDSTRINGEXACT, startIndex, cast(LPARAM)dfl.internal.utf.toUnicodez(str));
+				result = cast(int)prevwproc(LB_FINDSTRINGEXACT, startIndex, cast(LPARAM)dfl.internal.utf.toUnicodez(str));
 			else
-				result = prevwproc(LB_FINDSTRINGEXACT, startIndex, cast(LPARAM)dfl.internal.utf.unsafeAnsiz(str));
+				result = cast(int)prevwproc(LB_FINDSTRINGEXACT, startIndex, cast(LPARAM)dfl.internal.utf.unsafeAnsiz(str));
 			if(result == LB_ERR) // Redundant.
 				result = NO_MATCHES;
 		}
@@ -894,7 +894,7 @@ class ListBox: ListControl // docmain
 	///
 	final int getItemHeight(int idx)
 	{
-		int result = prevwproc(LB_GETITEMHEIGHT, idx, 0);
+		int result = cast(int)prevwproc(LB_GETITEMHEIGHT, idx, 0);
 		if(LB_ERR == result)
 			throw new DflException("Unable to obtain item height");
 		return result;
@@ -905,7 +905,7 @@ class ListBox: ListControl // docmain
 	final Rect getItemRectangle(int idx)
 	{
 		RECT rect;
-		if(LB_ERR == prevwproc(LB_GETITEMRECT, idx, cast(LPARAM)&rect))
+		if(LB_ERR == cast(int)prevwproc(LB_GETITEMRECT, idx, cast(LPARAM)&rect))
 		{
 			//if(idx >= 0 && idx < items.length)
 				return Rect(0, 0, 0, 0); // ?
@@ -934,7 +934,7 @@ class ListBox: ListControl // docmain
 		
 		if(created)
 		{
-			result = prevwproc(LB_ITEMFROMPOINT, 0, MAKELPARAM(x, y));
+			result = cast(int)prevwproc(LB_ITEMFROMPOINT, 0, MAKELPARAM(x, y));
 			if(!HIWORD(result)) // In client area
 			{
 				//result = LOWORD(result); // High word already 0.
@@ -961,7 +961,7 @@ class ListBox: ListControl // docmain
 	final void setSelected(int idx, bool byes)
 	{
 		if(created)
-			prevwproc(LB_SETSEL, byes, idx);
+			 prevwproc(LB_SETSEL, byes, idx);
 	}
 	
 	
@@ -1072,7 +1072,7 @@ class ListBox: ListControl // docmain
 		
 		LRESULT insert2(WPARAM idx, Dstring val)
 		{
-			insert(idx, val);
+			insert(cast(int)idx, val);
 			return idx;
 		}
 		
@@ -1090,7 +1090,7 @@ class ListBox: ListControl // docmain
 			}
 			else
 			{
-				i = _items.length;
+				i = cast(int)_items.length;
 			}
 			
 			insert(i, val);
@@ -1379,7 +1379,7 @@ class ListBox: ListControl // docmain
 				return;
 			
 			case LB_DELETESTRING:
-				icollection.removeAt(msg.wParam);
+				icollection.removeAt(cast(int)msg.wParam);
 				msg.result = icollection.length;
 				return;
 			

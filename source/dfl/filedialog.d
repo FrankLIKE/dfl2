@@ -243,7 +243,7 @@ abstract class FileDialog: CommonDialog // docmain
 						if(dfl.internal.utf.useUnicode)
 						{
 							str.sw ~= dfl.internal.utf.toUnicode(filterString[starti .. i]);
-							str.sw ~= "\0";
+							str.sw ~= "\0"w;
 						}
 						else
 						{
@@ -266,8 +266,8 @@ abstract class FileDialog: CommonDialog // docmain
 				goto bad_filter;
 			if(dfl.internal.utf.useUnicode)
 			{
-				str.sw ~= dfl.internal.utf.toUnicode(filterString[starti .. i]);
-				str.sw ~= "\0\0";
+				str.sw ~=dfl.internal.utf.toUnicode(filterString[starti .. i]);
+				str.sw ~= "\0\0"w;
 				
 				ofnw.lpstrFilter = str.sw.ptr;
 			}
@@ -530,7 +530,7 @@ abstract class FileDialog: CommonDialog // docmain
 				buf[ts.length] = 0;
 			}
 			
-			ofnw.nMaxFile = buf.length;
+			ofnw.nMaxFile =cast(uint)buf.length;
 			ofnw.lpstrFile = buf.ptr;
 		}
 		else
@@ -546,7 +546,7 @@ abstract class FileDialog: CommonDialog // docmain
 				buf[ts.length] = 0;
 			}
 			
-			ofna.nMaxFile = buf.length;
+			ofna.nMaxFile = cast(uint)buf.length;
 			ofna.lpstrFile = buf.ptr;
 		}
 		

@@ -141,8 +141,8 @@ else
 			assert(!mparent);
 			mparent = newParent;
 			
-			if(cast(size_t)mindex > mparent.menuItems.length)
-				mindex = mparent.menuItems.length;
+			if(cast(int)mindex > mparent.menuItems.length)
+				mindex = cast(int)mparent.menuItems.length;
 			
 			_setParent();
 		}
@@ -776,7 +776,7 @@ else
 			{
 				if(!Menu._compat092)
 				{
-					mi.mindex = length;
+					mi.mindex = cast(int)length;
 				}
 				
 				/+
@@ -799,7 +799,7 @@ else
 				
 				foreach(MenuItem it; items)
 				{
-					insert(length, it);
+					insert(cast(int)length, it);
 				}
 			}
 			
@@ -810,7 +810,7 @@ else
 				
 				foreach(Dstring it; items)
 				{
-					insert(length, it);
+					insert(cast(int)length, it);
 				}
 			}
 			
@@ -824,7 +824,7 @@ else
 			MenuItem[] items; // Kept populated so the menu can be moved around.
 			
 			
-			void _added(size_t idx, MenuItem val)
+			void _added(int idx, MenuItem val)
 			{
 				val.mindex = idx;
 				val._setParent(_owner);
@@ -832,9 +832,9 @@ else
 			}
 			
 			
-			void _removing(size_t idx, MenuItem val)
+			void _removing(int idx, MenuItem val)
 			{
-				if(size_t.max == idx) // Clear all.
+				if(int.max == idx) // Clear all.
 				{
 				}
 				else
@@ -861,7 +861,7 @@ else
 		// Extra.
 		deprecated final void opCatAssign(MenuItem mi)
 		{
-			menuItems.insert(menuItems.length, mi);
+			menuItems.insert(cast(int)menuItems.length, mi);
 		}
 		
 		

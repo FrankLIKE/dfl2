@@ -4,7 +4,7 @@ dfl2 is a GUI library for windows,which is based on D2 ,now D2.067b1.
 
 linker libs:
 ---
-ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib.
+user32.lib ole32.lib oleAut32.lib gdi32.lib Comctl32.lib Comdlg32.lib advapi32.lib uuid.lib ws2_32.lib.
 
 How to start:
 --
@@ -16,7 +16,7 @@ dub fetch dfl2 --local
 
 The latest features:
 ---
-1、dfl can be build by dco.
+1、dfl can be build by dco,and can get the  64 bit version.
 
 2、dfl can be used in Visual Studio .net (here VS 2010)， whose intellisense will help you very well(to look at the Screenshot),now it can debug in VD 0.3.39.
 
@@ -24,15 +24,19 @@ The latest features:
 
 base work
 --
-You should copy 'dfl2\dco\source\dco.ini' to your  $(DMDInstallDir): 'dmd2\window\bin' folder(optional),and copy the 'dfl2\source\dfl' folder to your  'dmd2\window\import'(if not exists,create it),and add importpath to sc.ini (after 'DFLAGS=', add "-I%@P%\..\..\windows\import").
+You should  copy the 'dfl2\source\dfl' folder to your  'dmd2\window\import'(if not exists,create it),and add importpath to sc.ini (after 'DFLAGS=', add "-I%@P%\..\..\windows\import").
 
 How to get the libs or exe files:
 ---
-1、 Double click the 'dcobuild.bat',to get them in the folder.
+1、 Double click the 'build.bat',to get them in the folder,if your x64 can work,you can get the 64 bit  version 'dfl64.lib'.(some things will be auto work)
+
+or
 
 2、run the dubbuild.bat in the path, to get them in 'debug' folder.
    or 
-     dub fetch dfl2,and run the dubbuild.bat in the path(C:\Users\[yourUserName]\AppData\Roaming\dub\packages\dfl2-1.0.4)
+     dub fetch dfl2,and run the dubbuild.bat in the path(C:\Users\[yourUserName]\AppData\Roaming\dub\packages\dfl2-1.0.7)
+
+or
 
 3、Open the dfl.sln, and run the projects to get them in 'debug' folder and 'release' folder(Now,auto copy to the '$(DMDInstallDir)windows\lib' OR 'bin' folder ).
 	 

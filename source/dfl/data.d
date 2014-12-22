@@ -273,7 +273,7 @@ class DataFormats // docmain
 		initfmt(CF_UNICODETEXT, "UnicodeText");
 		initfmt(CF_WAVE, "WaveAudio");
 		
-		//fmts.rehash;
+		fmts.rehash;
 	}
 	
 	
@@ -1178,7 +1178,7 @@ package class EnumDataObjectFORMATETC: DflComObject, IEnumFORMATETC
 				if(end > fmts.length)
 				{
 					result = S_FALSE; // ?
-					end = fmts.length;
+					end = cast(uint)fmts.length;
 					
 					if(pceltFetched)
 						*pceltFetched = end - idx;
@@ -1346,7 +1346,7 @@ class DtoComDataObject: DflComObject, dfl.internal.wincom.IDataObject // package
 				
 				//src = data.value;
 				src = DataFormats.getClipboardValueFromData(dfmt.id, data);
-				hg = GlobalAlloc(GMEM_SHARE, src.length);
+				hg = GlobalAlloc(GMEM_SHARE, cast(uint)src.length);
 				if(!hg)
 				{
 					result = STG_E_MEDIUMFULL;
