@@ -44,10 +44,10 @@ version(_dfl_needcom)
 	
 	struct GUID {          // size is 16
 		 align(1):
-		DWORD Data1;
-		WORD  Data2;
-		WORD  Data3;
-		BYTE  Data4[8];
+		DWORD   Data1;
+		WORD    Data2;
+		WORD    Data3;
+		BYTE[8] Data4;
 	}
 	
 	enum
