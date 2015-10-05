@@ -9,5 +9,6 @@
 	"importPaths": ["source/"],
 	"targetType": "library",
 	"targetName": "dfl_debug",
-	"targetPath": "debug"
+	"targetPath": "debug",
+	"libs": [ "user32", "ole32", "oleAut32", "gdi32", "Comctl32", "Comdlg32", "advapi32", "uuid", "ws2_32" ]
 }
