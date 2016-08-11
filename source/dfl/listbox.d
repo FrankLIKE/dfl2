@@ -5,6 +5,8 @@
 ///
 module dfl.listbox;
 
+static import std.algorithm;
+
 private import dfl.internal.dlib;
 
 private import dfl.internal.winapi, dfl.control, dfl.base, dfl.application;
@@ -979,7 +981,7 @@ class ListBox: ListControl // docmain
 		{
 			Object[] itemscopy;
 			itemscopy = icollection._items.dup;
-			itemscopy.sort;
+			std.algorithm.sort( itemscopy );
 			
 			items.clear();
 			
